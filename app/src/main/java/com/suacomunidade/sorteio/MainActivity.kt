@@ -114,7 +114,23 @@ class MainActivity : AppCompatActivity() {
         webView.webViewClient = WebViewClient()
 
         webView.webChromeClient = object : WebChromeClient() {
-            // ... (existing overrides) ...
+            // Seletor de arquivos para <input type="file"> (restaurar backup)
+            override fun onShowFileChooser(
+                webView: WebView?,
+                callback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: FileChooserParams?
+            ): Boolean {
+                filePathCallback?.onReceiveValue(null)
+                filePathCallback = callback
+                return try {
+                    fileChooserLauncher.launch("*/*")
+                    true
+                } catch (e: Exception) {
+                    filePathCallback?.onReceiveValue(null)
+                    filePathCallback = null
+                    false
+                }
+            }
         }
 
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
@@ -152,6 +168,41 @@ class MainActivity : AppCompatActivity() {
         }
 
         @JavascriptInterface
+        fun copyText(text: String) {
+            activity.runOnUiThread {
+                val clipboard = activity.getSystemService(android.content.Context.CLIPBOARD_SERVICE)
+                    as android.content.ClipboardManager
+                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Comunidade 11", text))
+                android.widget.Toast.makeText(activity, "Copiado! Cole no WhatsApp.", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        @JavascriptInterface
+        fun saveBackup(json: String, fileName: String) {
+            activity.runOnUiThread {
+                try {
+                    val dir = File(activity.cacheDir, "backup")
+                    dir.mkdirs()
+                    dir.listFiles()?.forEach { it.delete() }
+                    // Nome vindo do JS: mantém só o nome do arquivo, sem caminhos
+                    val safeName = File(fileName).name.ifBlank { "backup_comunidade11.json" }
+                    val file = File(dir, safeName)
+                    file.writeText(json, Charsets.UTF_8)
+
+                    val uri = FileProvider.getUriForFile(activity, "${activity.packageName}.fileprovider", file)
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "application/json"
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    activity.startActivity(Intent.createChooser(intent, "Salvar backup"))
+                } catch (e: Exception) {
+                    android.widget.Toast.makeText(activity, "Erro ao gerar backup: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        @JavascriptInterface
         fun print(html: String) {
             activity.runOnUiThread {
                 activity.printWebView = WebView(activity)
@@ -161,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                         activity.imprimirWebView(view!!)
                     }
                 }
-                activity.printWebView?.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+                activity.printWebView?.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
             }
         }
 

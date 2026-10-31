@@ -4,199 +4,311 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Comunidade 11</title>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="fonts/fonts.css" rel="stylesheet">
     <style>
         :root {
             --primary: #A30000;
+            --primary-dark: #7A0000;
+            --primary-soft: #FBEAEA;
             --secondary: #5F6368;
             --bg: #F8F9FA;
             --card: #FFFFFF;
             --text: #202124;
+            --muted: #80868B;
             --border: #E8EAED;
             --success: #1E8E3E;
+            --success-soft: #E6F4EA;
+            --danger: #D63031;
+            --danger-soft: #FDECEC;
             --warning: #F9AB00;
+            --radius: 16px;
+            --radius-sm: 12px;
+            --shadow: 0 1px 2px rgba(60,64,67,.06), 0 4px 14px rgba(60,64,67,.06);
+            --rail: 84px;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 90px;
+            padding-bottom: 78px;
             -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* ---------- Cabeçalho ---------- */
         header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 15px;
-            text-align: center;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(122,0,0,.25);
+        }
+        .brand-logo {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #fff; object-fit: cover; flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,.55);
+        }
+        header h1 {
+            margin: 0; font-family: 'Crimson Text', serif; font-weight: 700;
+            letter-spacing: .5px; font-size: 20px; line-height: 1.1;
+        }
+        .header-sub {
+            margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: .8px;
+            text-transform: uppercase; background: rgba(255,255,255,.16);
+            padding: 5px 12px; border-radius: 999px;
         }
 
+        /* ---------- Navegação ---------- */
         .tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(255,255,255,.96);
             backdrop-filter: blur(10px);
             display: flex;
             border-top: 1px solid var(--border);
             z-index: 1000;
-            height: 70px;
+            height: 66px;
         }
-
         .tab-btn {
-            flex: 1;
-            padding: 5px;
-            border: none;
-            background: none;
-            font-family: inherit;
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--secondary);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            flex: 1; padding: 6px 4px; border: none; background: none;
+            font-family: inherit; font-size: 11px; font-weight: 600;
+            color: var(--secondary); cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 2px; position: relative; transition: color .15s, background .15s;
+        }
+        .tab-btn span { font-size: 21px; line-height: 1; transition: transform .2s; }
+        .tab-btn:active { background: var(--primary-soft); }
+        .tab-btn.active { color: var(--primary); }
+        .tab-btn.active span { transform: scale(1.15); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; top: 0; left: 28%; right: 28%;
+            height: 3px; border-radius: 0 0 3px 3px; background: var(--primary);
         }
 
-        .tab-btn.active { color: var(--primary); }
-        .tab-btn span { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s; }
-        .tab-btn.active span { transform: scale(1.2); }
-
-        .section { display: none; padding: 15px; max-width: 800px; margin: 0 auto; }
-        .section.active { display: block; }
+        /* ---------- Seções e cartões ---------- */
+        .section { display: none; padding: 14px; max-width: 1100px; margin: 0 auto; padding-bottom: 96px; }
+        .section.active { display: block; animation: fadeIn .22s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
         .card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
+            background: var(--card); border-radius: var(--radius); padding: 18px;
+            margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);
             position: relative;
         }
+        .card.flush { padding: 6px 4px; }
+        h2 { font-family: 'Crimson Text', serif; color: var(--primary); margin: 0 0 12px 0; font-size: 21px; font-weight: 700; }
+        h3 { margin: 0 0 8px; font-size: 15px; }
+        .empty { text-align: center; color: var(--muted); padding: 22px 10px; font-size: 13px; }
+        .empty b { display: block; font-size: 26px; margin-bottom: 6px; }
+        .cols-2 { display: grid; grid-template-columns: 1fr; gap: 0 12px; align-items: start; }
 
-        h2 { font-family: 'Crimson Text', serif; color: var(--primary); margin: 0 0 15px 0; font-size: 20px; }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
+        /* ---------- Painel de números ---------- */
+        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .dash-item {
-            background: #fff;
-            padding: 15px 10px;
-            border-radius: 14px;
-            text-align: center;
-            border: 1px solid var(--border);
-            cursor: pointer;
+            background: #fff; padding: 12px 8px; border-radius: var(--radius-sm); text-align: center;
+            border: 1px solid var(--border); box-shadow: var(--shadow);
         }
-        .dash-item.full { grid-column: span 2; background: var(--primary); color: white; border:none; }
-        .dash-item span { display: block; font-size: 22px; font-weight: bold; color: var(--primary); }
+        .dash-item.full { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; }
+        .dash-item span { display: block; font-size: 24px; font-weight: 700; color: var(--primary); line-height: 1.15; }
         .dash-item.full span { color: white; }
-        .dash-item label { font-size: 11px; color: #5f6368; text-transform: uppercase; font-weight: 600; }
-        .dash-item.full label { color: rgba(255,255,255,0.8); }
+        .dash-item label { font-size: 10.5px; color: var(--secondary); text-transform: uppercase; font-weight: 600; letter-spacing: .5px; }
+        .dash-item.full label { color: rgba(255,255,255,.82); }
+        .dashboard.fin { grid-template-columns: 1fr 1fr; }
+        .dashboard.fin .dash-item { padding: 14px 10px; text-align: left; display: flex; flex-direction: column; }
+        .dashboard.fin .dash-item span { font-size: 26px; }
+        .dash-item.caixa { background: linear-gradient(135deg, #1E8E3E, #146C2E); border: none; }
+        .dash-item.caixa span, .dash-item.caixa label { color: #fff; }
+        .dash-item.caixa label { opacity: .85; }
+        .dash-item.divida { border-color: #F3C4C4; background: var(--danger-soft); }
+        .dash-item.divida span { color: var(--danger); }
 
-        .btn-add {
-            position: fixed;
-            right: 20px;
-            bottom: 85px;
-            background: var(--primary);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            font-size: 30px;
-            box-shadow: 0 4px 15px rgba(163,0,0,0.3);
-            cursor: pointer;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* ---------- Botões ---------- */
+        .btn-add, .btn-calc {
+            position: fixed; right: 16px; bottom: 82px; color: white; border: none; cursor: pointer;
+            z-index: 999; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: transform .15s;
         }
-
-        .btn-calc {
-            position: fixed;
-            left: 20px;
-            bottom: 85px;
-            background: #2c3e50;
-            color: white;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: none;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            cursor: pointer;
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            box-sizing: border-box;
-            font-size: 16px;
-            background: #F8F9FA;
-            margin-bottom: 10px;
-        }
+        .btn-add { background: var(--primary); width: 58px; height: 58px; font-size: 30px; box-shadow: 0 6px 18px rgba(163,0,0,.38); }
+        .btn-calc { background: #2c3e50; width: 54px; height: 54px; font-size: 24px; box-shadow: 0 6px 16px rgba(0,0,0,.25); display: none; }
+        .btn-add:active, .btn-calc:active { transform: scale(.92); }
 
         .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            background: var(--primary); color: white; border: 2px solid var(--primary);
+            padding: 12px 14px; min-height: 46px; border-radius: var(--radius-sm);
+            font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: .3px; width: 100%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: transform .1s, filter .15s, background .15s;
         }
-        .btn.outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn:active { transform: scale(.98); filter: brightness(.92); }
+        .btn.outline { background: transparent; color: var(--primary); }
+        .btn.outline:active { background: var(--primary-soft); }
+        .btn.green { background: var(--success); border-color: var(--success); }
+        .btn.whats { background: #25D366; border-color: #25D366; }
+        .btn.gray { background: #4A4A4A; border-color: #4A4A4A; }
+        .btn.danger { background: transparent; border-color: transparent; color: var(--danger); }
+        .btn.sm { min-height: 36px; padding: 6px 12px; font-size: 12px; width: auto; }
+        .btn-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .btn-row .btn { font-size: 12px; padding: 8px; min-height: 42px; }
 
-        .member-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
+        /* ---------- Formulários ---------- */
+        input, select, textarea {
+            width: 100%; padding: 11px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+            font-family: inherit; font-size: 16px; background: #F8F9FA; margin-bottom: 10px; color: var(--text);
+            transition: border-color .15s, box-shadow .15s, background .15s;
         }
-        .tag { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: bold; margin-right: 5px; text-transform: uppercase; }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(163,0,0,.12);
+        }
+        input[type=checkbox] { width: auto; margin: 0; accent-color: var(--primary); transform: scale(1.15); }
+        label.field { display: block; font-size: 11px; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+        .check-box { background: #F8F9FA; padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .check-box.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .check-box label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+
+        /* ---------- Gestão ---------- */
+        .search-wrap { position: sticky; top: 0; z-index: 5; background: var(--card); padding-bottom: 2px; }
+        .list-meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 2px 4px 6px; }
+        #lista-membros { display: grid; grid-template-columns: 1fr; gap: 0 14px; }
+        .member-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px 8px;
+            border-bottom: 1px solid var(--border); cursor: pointer; border-radius: 10px;
+            transition: background .12s;
+        }
+        .member-item:active { background: var(--primary-soft); }
+        .member-item.away { opacity: .62; }
+        .avatar {
+            width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; letter-spacing: .3px;
+        }
+        .avatar.sm { width: 30px; height: 30px; font-size: 11px; }
+        .m-info { flex: 1; min-width: 0; }
+        .m-info strong { display: block; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .m-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 3px; font-size: 11px; color: var(--muted); }
+        .chev { color: #C4C7CC; font-size: 22px; line-height: 1; }
+        .tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; display: inline-block; }
         .tag-casal { background: #FFF3CD; color: #856404; }
         .tag-role { background: #E8F0FE; color: #1967D2; }
+        .tag-resp { background: var(--primary); color: #fff; }
+        .tag-away { background: #ECEFF1; color: #546E7A; }
+        .birthdays { display: flex; gap: 8px; align-items: center; background: #FFF8E1; border: 1px solid #FFE8A3; color: #7A5B00; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 12.5px; margin-bottom: 12px; }
+        .birthdays b { font-size: 18px; }
 
-        .progress-container { width: 100%; background: #eee; border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--success); transition: width 0.4s; }
+        /* ---------- Sorteio ---------- */
+        .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 8px; }
+        .chips:empty { display: none; }
+        .chip {
+            flex-shrink: 0; border: 1px solid var(--border); background: #fff; color: var(--secondary);
+            border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+        .chip:active { background: var(--primary-soft); }
+        .chip.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .group-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 12px; }
+        .group-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+        .group-head { background: var(--primary-soft); color: var(--primary); display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; }
+        .group-head h3 { margin: 0; font-family: 'Crimson Text', serif; font-size: 18px; }
+        .group-head .count { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 10px; }
+        .group-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 1px solid var(--border); font-size: 13.5px; }
+        .group-row .nm { flex: 1; min-width: 0; line-height: 1.2; overflow-wrap: anywhere; }
+        .mv { border: none; background: #F1F3F4; color: var(--secondary); border-radius: 8px; width: 32px; height: 32px; font-size: 15px; cursor: pointer; }
+        .mv:active { background: var(--primary-soft); }
+        .sort-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
 
-        .calendar-day { padding: 8px 0; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; cursor: pointer; min-height: 50px; display: flex; flex-direction: column; align-items: center; background: white; }
-        .calendar-day.today { background: #E8F0FE; border-color: #1967D2; font-weight: bold; }
-        .calendar-day.selected { background: var(--primary) !important; color: white !important; }
-        .event-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; margin-top: 4px; }
+        /* ---------- Finanças ---------- */
+        .fin-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 4px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+        .fin-item:last-child { border-bottom: none; }
+        .fin-item.income strong { color: var(--success); }
+        .fin-item.debt strong { color: var(--danger); }
+        .fin-item small { color: var(--muted); display: block; font-size: 11px; }
+        .debt-card { border: 1px solid var(--border); border-left: 5px solid var(--danger); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; background: #fff; }
+        .progress-container { width: 100%; background: #ECEFF1; border-radius: 10px; height: 8px; margin: 10px 0 6px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--success); transition: width .4s; border-radius: 10px; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; overflow-y: auto; }
-        .modal-content { background: white; margin: 20px auto; padding: 25px; width: 90%; max-width: 500px; border-radius: 20px; }
+        /* ---------- Agenda ---------- */
+        .agenda-layout { display: grid; grid-template-columns: 1fr; gap: 0 12px; align-items: start; }
+        .cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cal-head h3 { margin: 0; font-family: 'Crimson Text', serif; font-size: 21px; color: var(--primary); text-align: center; flex: 1; }
+        .cal-nav { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border); background: #fff; color: var(--primary); font-size: 14px; cursor: pointer; }
+        .cal-nav:active { background: var(--primary-soft); }
+        .cal-weekdays, #calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal-weekdays { text-align: center; margin-bottom: 4px; font-weight: 700; font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+        .calendar-day {
+            padding: 4px 0; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; cursor: pointer;
+            min-height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white;
+            transition: background .12s, transform .1s;
+        }
+        .calendar-day:active { transform: scale(.94); }
+        .calendar-day.today { background: #E8F0FE; border-color: #1967D2; font-weight: 700; color: #1967D2; }
+        .calendar-day.selected { background: var(--primary) !important; color: white !important; border-color: var(--primary); }
+        .calendar-day.selected .event-dot { background: #fff; }
+        .event-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; margin-top: 3px; }
+        .ev-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; background: #F8F9FA; border-radius: 10px; margin-bottom: 6px; border-left: 4px solid var(--primary); }
+        .ev-row span { font-size: 13px; flex: 1; }
+        .ev-row button { border: none; background: none; font-size: 16px; padding: 4px 6px; cursor: pointer; }
+        .ev-next { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .ev-next:last-child { border-bottom: none; }
+        .ev-date { background: var(--primary-soft); color: var(--primary); border-radius: 10px; min-width: 48px; text-align: center; padding: 4px 0; font-weight: 700; font-size: 16px; line-height: 1.1; }
+        .ev-date small { display: block; font-size: 9px; letter-spacing: .5px; text-transform: uppercase; }
 
-        .fin-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
-        .fin-item.income { color: var(--success); }
-        .fin-item.debt { color: #d63031; }
+        /* ---------- Modais ---------- */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(32,33,36,.55); z-index: 3000; overflow-y: auto; animation: fadeBg .18s ease; }
+        @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+        .modal-content {
+            background: white; margin: 14px auto; padding: 20px; width: 92%; max-width: 520px;
+            border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,.25); animation: pop .22s ease;
+        }
+        .modal-content h2 { text-align: center; }
+        .check-row { display: flex; align-items: center; gap: 10px; padding: 8px 6px; font-size: 13.5px; border-bottom: 1px solid var(--border); text-transform: capitalize; }
+        .check-row:last-child { border-bottom: none; }
+        .check-row small { margin-left: auto; color: var(--muted); text-transform: none; }
+        .swap-btn { justify-content: space-between; }
+
+        .calc-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .calc-keys .btn { min-height: 48px; font-size: 18px; padding: 6px; }
+
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+        /* ---------- Paisagem (o app roda deitado): abas viram coluna lateral ---------- */
+        @media (orientation: landscape) and (max-height: 560px) {
+            body { padding-left: var(--rail); padding-bottom: 0; }
+            header { padding: 5px 16px; }
+            .brand-logo { width: 28px; height: 28px; }
+            header h1 { font-size: 18px; }
+            .tab-bar {
+                top: 0; bottom: 0; right: auto; left: 0; width: var(--rail); height: auto;
+                flex-direction: column; justify-content: center; gap: 4px; padding: 6px 6px;
+                border-top: none; border-right: 1px solid var(--border);
+            }
+            .tab-btn { flex: 0 0 auto; height: 62px; border-radius: 14px; }
+            .tab-btn.active { background: var(--primary-soft); }
+            .tab-btn.active::after { top: 18%; bottom: 18%; left: -6px; right: auto; width: 4px; height: auto; border-radius: 0 4px 4px 0; }
+            .section { padding: 10px 14px 90px; }
+            .btn-add, .btn-calc { bottom: 16px; right: 18px; }
+            .cols-2 { grid-template-columns: 1fr 1fr; }
+            #lista-membros { grid-template-columns: 1fr 1fr; }
+            .agenda-layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+            .calendar-day { min-height: 34px; padding: 2px 0; font-size: 12px; }
+            .cal-nav { width: 34px; height: 34px; }
+            .dash-item { padding: 8px 6px; }
+            .dash-item span { font-size: 20px; }
+            .dashboard.fin .dash-item { padding: 10px 14px; }
+            .dashboard.fin .dash-item span { font-size: 22px; }
+            .card { padding: 14px 16px; }
+            .modal-content { margin: 8px auto; max-width: 720px; padding: 14px 18px; }
+            #editModal .modal-content { max-width: 760px; }
+            #editModal .edit-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+            .group-grid { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+        }
 
         @media print {
             .tab-bar, header, .btn, .btn-add, .btn-calc { display: none !important; }
@@ -208,104 +320,131 @@
 <body>
 
     <header>
-        <h1 style="margin:0; font-family:'Crimson Text', serif; letter-spacing:1px; font-size: 18px;">Comunidade 11</h1>
+        <img class="brand-logo" src="logo.png" alt="">
+        <h1>Comunidade 11</h1>
+        <span class="header-sub" id="header-sub">Gestão</span>
     </header>
 
     <!-- GESTÃO -->
     <main id="tab-comunidade" class="section active">
-        <button class="btn-add" onclick="novoIrmao()">+</button>
+        <button class="btn-add" onclick="novoIrmao()" aria-label="Novo irmão">+</button>
         <div id="dashboard" class="dashboard"></div>
+        <div id="aniversarios"></div>
         <div class="card">
-            <input type="text" id="search" placeholder="🔍 Buscar irmão..." oninput="filtrarLista()">
+            <div class="search-wrap">
+                <input type="search" id="search" placeholder="🔍  Buscar irmão..." oninput="filtrarLista()">
+            </div>
+            <div class="list-meta"><span id="lista-contagem"></span><span>Toque para editar</span></div>
             <div id="lista-membros"></div>
-            <button class="btn outline" style="margin-top:20px;" onclick="exportarListaMembrosPDF()">LISTA COMPLETA (PDF)</button>
+        </div>
+        <div class="card">
+            <h2>Documentos e backup</h2>
+            <div class="btn-row">
+                <button class="btn outline" onclick="exportarListaMembrosPDF()">📄 Lista (PDF)</button>
+                <button class="btn outline" onclick="exportarBackup()">💾 Salvar backup</button>
+                <button class="btn outline" onclick="document.getElementById('backup-file').click()">📥 Restaurar</button>
+            </div>
+            <input type="file" id="backup-file" accept=".json,application/json" style="display:none" onchange="importarBackup(this)">
         </div>
     </main>
 
     <!-- SORTEIO -->
     <main id="tab-sorteio" class="section">
-        <div id="historico-sorteios" style="margin-bottom:15px; display:flex; gap:10px; overflow-x:auto; padding-bottom:5px;"></div>
+        <div id="historico-sorteios" class="chips"></div>
         <div class="card">
-            <h2 style="text-align:center;">Sorteio de Grupos</h2>
-            <button class="btn" onclick="gerarSorteio()">SORTEAR AGORA</button>
+            <h2>Sorteio de Grupos</h2>
+            <div class="sort-opts">
+                <div><label class="field" for="sort-n">Nº de grupos</label>
+                    <select id="sort-n"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+                <div><label class="field" for="sort-data">Data</label>
+                    <input type="date" id="sort-data"></div>
+            </div>
+            <div class="check-box"><label><input type="checkbox" id="sort-casais" checked> Manter casais no mesmo grupo</label></div>
+            <p id="sort-info" style="margin:0 0 12px; font-size:12px; color:var(--muted);"></p>
+            <button class="btn" onclick="gerarSorteio()">🎲 SORTEAR AGORA</button>
         </div>
         <div id="container-resultados" style="display:none;">
-            <div id="resultado-lista" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:15px; margin-bottom: 20px;"></div>
-            <div class="card" style="display: flex; flex-direction: column; gap: 10px;">
-                <button class="btn" style="background:#27ae60;" onclick="confirmarSorteioEAgenda()">CONFIRMAR E LANÇAR NA AGENDA</button>
-                <button class="btn outline" onclick="exportarGruposParaImpressao()">EXPORTAR GRUPOS (PDF)</button>
-                <button class="btn" style="background:#25D366;" onclick="copiarGruposWhatsApp()">COPIAR PARA WHATSAPP</button>
+            <div id="resultado-lista" class="group-grid"></div>
+            <div class="card">
+                <div class="btn-row">
+                    <button class="btn green" onclick="confirmarSorteioEAgenda()">✔ Lançar na agenda</button>
+                    <button class="btn outline" onclick="exportarGruposParaImpressao()">📄 Grupos (PDF)</button>
+                    <button class="btn whats" onclick="copiarGruposWhatsApp()">💬 Copiar p/ WhatsApp</button>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- FINANCEIRO -->
     <main id="tab-financeiro" class="section">
-        <button id="btn-calc" class="btn-calc" onclick="abrirCalculadora()">🧮</button>
-        <div id="dash-financeiro" class="dashboard">
-            <div class="dash-item full" style="background:#1E8E3E;">
-                <span id="total-caixa" style="color:white;">R$ 0,00</span>
-                <label style="color:rgba(255,255,255,0.8);">Saldo em Caixa</label>
+        <button id="btn-calc" class="btn-calc" onclick="abrirCalculadora()" aria-label="Calculadora">🧮</button>
+        <div id="dash-financeiro" class="dashboard fin">
+            <div class="dash-item caixa">
+                <span id="total-caixa">R$ 0,00</span>
+                <label>Saldo em caixa</label>
             </div>
-            <div class="dash-item" style="border-color:#d63031; grid-column: span 2;">
-                <span id="total-dividas" style="color:#d63031;">R$ 0,00</span>
-                <label>Dívidas Pendentes</label>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>Registrar Coleta</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <input type="date" id="fin-data">
-                <input type="number" step="0.01" id="fin-valor" placeholder="R$ 0,00">
-            </div>
-            <button class="btn" onclick="adicionarMovimentacao('entrada')">REGISTRAR ENTRADA</button>
-        </div>
-
-        <div class="card">
-            <h2>Dívidas Pendentes</h2>
-            <div id="lista-dividas"></div>
-            <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
-            <div class="form-group">
-                <label>Nova Dívida</label>
-                <input type="text" id="fin-desc" placeholder="Descrição da dívida">
-                <input type="number" step="0.01" id="fin-valor-gasto" placeholder="Valor Total R$">
-                <button class="btn outline" onclick="adicionarMovimentacao('saida')">SALVAR DÍVIDA</button>
+            <div class="dash-item divida">
+                <span id="total-dividas">R$ 0,00</span>
+                <label>Dívidas pendentes</label>
             </div>
         </div>
 
-        <div class="card">
-            <h2>Histórico de Coletas</h2>
-            <div id="lista-coletas"></div>
-            <h2 style="margin-top:20px;">Histórico de Saídas</h2>
-            <div id="lista-saidas"></div>
-            <button class="btn outline" style="margin-top:25px;" onclick="abrirFinanceReportModal()">RELATÓRIO PDF</button>
+        <div class="cols-2">
+            <div>
+                <div class="card">
+                    <h2>Registrar Coleta</h2>
+                    <div class="form-grid">
+                        <div><label class="field" for="fin-data">Data</label><input type="date" id="fin-data"></div>
+                        <div><label class="field" for="fin-valor">Valor</label><input type="number" step="0.01" inputmode="decimal" id="fin-valor" placeholder="R$ 0,00"></div>
+                    </div>
+                    <button class="btn" onclick="adicionarMovimentacao('entrada')">REGISTRAR ENTRADA</button>
+                </div>
+                <div class="card">
+                    <h2>Nova Dívida</h2>
+                    <input type="text" id="fin-desc" placeholder="Descrição da dívida">
+                    <input type="number" step="0.01" inputmode="decimal" id="fin-valor-gasto" placeholder="Valor total R$">
+                    <button class="btn outline" onclick="adicionarMovimentacao('saida')">SALVAR DÍVIDA</button>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Dívidas Pendentes</h2>
+                <div id="lista-dividas"></div>
+            </div>
         </div>
+
+        <div class="cols-2">
+            <div class="card"><h2>Histórico de Coletas</h2><div id="lista-coletas"></div></div>
+            <div class="card"><h2>Histórico de Saídas</h2><div id="lista-saidas"></div></div>
+        </div>
+        <button class="btn outline" onclick="abrirFinanceReportModal()">📄 RELATÓRIO PDF</button>
     </main>
 
     <!-- AGENDA -->
     <main id="tab-agenda" class="section">
-        <div class="card">
-            <div id="calendar-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <button class="btn outline" style="width:auto; padding:5px 15px;" onclick="changeMonth(-1)">◀</button>
-                <div style="text-align:center;">
-                    <h3 id="current-month-year" style="margin:0; font-family:'Crimson Text', serif; color:var(--primary);"></h3>
+        <div class="agenda-layout">
+            <div class="card">
+                <div class="cal-head">
+                    <button class="cal-nav" onclick="changeMonth(-1)" aria-label="Mês anterior">◀</button>
+                    <h3 id="current-month-year"></h3>
+                    <button class="cal-nav" onclick="changeMonth(1)" aria-label="Próximo mês">▶</button>
                 </div>
-                <button class="btn outline" style="width:auto; padding:5px 15px;" onclick="changeMonth(1)">▶</button>
+                <div class="cal-weekdays"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div>
+                <div id="calendar-days"></div>
+                <button class="btn outline" style="margin-top:14px;" onclick="abrirExportAgendaModal()">📄 EXPORTAR (PDF / IMAGEM)</button>
             </div>
-            <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:5px; text-align:center; margin-bottom:5px; font-weight:bold; font-size:10px; color:#999;">
-                <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div>
-            </div>
-            <div id="calendar-days" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:5px;"></div>
-            <button class="btn outline" style="margin-top:20px;" onclick="abrirExportAgendaModal()">EXPORTAR (PDF / IMAGEM)</button>
-        </div>
 
-        <div id="events-card" class="card" style="display:none;">
-            <h3 id="selected-date-title" style="margin-top:0;">Eventos</h3>
-            <div id="events-list" style="margin-bottom:15px;"></div>
-            <div class="form-group" style="border-top: 1px solid #eee; padding-top:15px;">
-                <input type="text" id="new-event-desc" placeholder="Descrição do evento">
-                <button class="btn" onclick="addCalendarEvent()">SALVAR EVENTO</button>
+            <div>
+                <div id="events-hint" class="card">
+                    <h2>Próximos eventos</h2>
+                    <div id="proximos-eventos"></div>
+                    <p style="font-size:12px; color:var(--muted); margin:12px 0 0;">Toque em um dia do calendário para ver ou criar eventos.</p>
+                </div>
+                <div id="events-card" class="card" style="display:none;">
+                    <h2 id="selected-date-title">Eventos</h2>
+                    <div id="events-list" style="margin-bottom:12px;"></div>
+                    <input type="text" id="new-event-desc" placeholder="Descrição do evento">
+                    <button class="btn" onclick="addCalendarEvent()">SALVAR EVENTO</button>
+                </div>
             </div>
         </div>
     </main>
@@ -321,54 +460,60 @@
     <!-- MODAIS -->
     <div id="editModal" class="modal"><div class="modal-content">
         <h2 id="editTitle">Membro</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; background:#f8f9fa; padding:10px; border-radius:10px; margin-bottom:15px;">
-            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editAtivo" style="width:auto; margin:0;"> Ativo</label>
-            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editAfastado" style="width:auto; margin:0;"> Afastado</label>
-            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editVocacionado" style="width:auto; margin:0;"> Vocacionado</label>
-            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editIsResponsavel" style="width:auto; margin:0;"> Responsável</label>
-        </div>
-        <input type="text" id="editNome" placeholder="Nome Completo">
-        <input type="date" id="editNasc">
-        <input type="tel" id="editTel" placeholder="Telefone">
-        <textarea id="editEndereco" placeholder="Endereço" rows="2"></textarea>
-        <select id="editRole">
-            <option value="Sem Função">Sem Função</option><option value="Ostiário">Ostiário</option><option value="Salmista">Salmista</option>
-            <option value="Pão">Fazer o Pão</option><option value="Limpeza">Limpeza</option><option value="Passar Roupa">Passar Roupa</option>
-            <option value="Vinho">Vinho</option><option value="Flores">Flores</option>
-        </select>
-        <div style="background:#f0f0f0; padding:10px; border-radius:10px; margin-bottom:15px;">
-            <label style="display:flex; align-items:center; gap:8px; font-size:12px;"><input type="checkbox" id="editIsCasal" style="width:auto; margin:0;"> Casado(a)?</label>
-            <select id="editConjugeSelect" style="margin-top:10px; display:none;"></select>
+        <div class="edit-cols">
+            <div>
+                <div class="check-box grid">
+                    <label><input type="checkbox" id="editAtivo"> Ativo</label>
+                    <label><input type="checkbox" id="editAfastado"> Afastado</label>
+                    <label><input type="checkbox" id="editVocacionado"> Vocacionado</label>
+                    <label><input type="checkbox" id="editIsResponsavel"> Responsável</label>
+                </div>
+                <input type="text" id="editNome" placeholder="Nome completo">
+                <input type="date" id="editNasc" aria-label="Data de nascimento">
+                <input type="tel" id="editTel" placeholder="Telefone">
+            </div>
+            <div>
+                <textarea id="editEndereco" placeholder="Endereço" rows="2"></textarea>
+                <select id="editRole">
+                    <option value="Sem Função">Sem Função</option><option value="Ostiário">Ostiário</option><option value="Salmista">Salmista</option>
+                    <option value="Pão">Fazer o Pão</option><option value="Limpeza">Limpeza</option><option value="Passar Roupa">Passar Roupa</option>
+                    <option value="Vinho">Vinho</option><option value="Flores">Flores</option>
+                </select>
+                <div class="check-box">
+                    <label><input type="checkbox" id="editIsCasal" onchange="toggleConjuge()"> Casado(a)?</label>
+                    <select id="editConjugeSelect" style="margin:10px 0 0; display:none;"></select>
+                </div>
+            </div>
         </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <button class="btn" onclick="confirmarEdicao()">SALVAR</button>
             <button class="btn outline" onclick="fecharModal()">CANCELAR</button>
         </div>
-        <button class="btn danger" style="margin-top:10px; background:none; color:red; border:none;" onclick="excluirMembro()">Excluir Irmão</button>
+        <button id="btnExcluir" class="btn danger" style="margin-top:6px;" onclick="excluirMembro()">Excluir irmão</button>
     </div></div>
 
-    <div id="swapModal" class="modal"><div class="modal-content">
-        <h2 style="text-align:center;">Mover Irmão</h2>
-        <p id="swapMembroName" style="text-align:center; font-weight:bold; color:var(--primary);"></p>
-        <div id="swapGroupsList" style="display:grid; gap:10px; margin-top:20px;"></div>
-        <button class="btn outline" style="margin-top:20px;" onclick="fecharSwapModal()">CANCELAR</button>
+    <div id="swapModal" class="modal"><div class="modal-content" style="max-width:420px;">
+        <h2>Mover irmão</h2>
+        <p id="swapMembroName" style="text-align:center; font-weight:700; color:var(--primary); margin:0;"></p>
+        <div id="swapGroupsList" style="display:grid; gap:10px; margin-top:16px;"></div>
+        <button class="btn outline" style="margin-top:16px;" onclick="fecharSwapModal()">CANCELAR</button>
     </div></div>
 
     <div id="calcModal" class="modal"><div class="modal-content" style="max-width:320px;">
-        <input type="text" id="calc-display" readonly style="font-size:28px; text-align:right; height:60px; margin-bottom:15px;">
-        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
-            <button class="btn outline" onclick="calcClear()">C</button><button class="btn outline" onclick="calcInput('/')">/</button><button class="btn outline" onclick="calcInput('*')">*</button><button class="btn danger" onclick="fecharCalculadora()">✕</button>
-            <button class="btn outline" onclick="calcInput('7')">7</button><button class="btn outline" onclick="calcInput('8')">8</button><button class="btn outline" onclick="calcInput('9')">9</button><button class="btn outline" onclick="calcInput('-')">-</button>
+        <input type="text" id="calc-display" readonly style="font-size:28px; text-align:right; height:60px; margin-bottom:12px;">
+        <div class="calc-keys">
+            <button class="btn outline" onclick="calcClear()">C</button><button class="btn outline" onclick="calcInput('/')">÷</button><button class="btn outline" onclick="calcInput('*')">×</button><button class="btn danger" onclick="fecharCalculadora()">✕</button>
+            <button class="btn outline" onclick="calcInput('7')">7</button><button class="btn outline" onclick="calcInput('8')">8</button><button class="btn outline" onclick="calcInput('9')">9</button><button class="btn outline" onclick="calcInput('-')">−</button>
             <button class="btn outline" onclick="calcInput('4')">4</button><button class="btn outline" onclick="calcInput('5')">5</button><button class="btn outline" onclick="calcInput('6')">6</button><button class="btn outline" onclick="calcInput('+')">+</button>
-            <button class="btn outline" onclick="calcInput('1')">1</button><button class="btn outline" onclick="calcInput('2')">2</button><button class="btn outline" onclick="calcInput('3')">3</button><button class="btn" style="grid-row: span 2;" onclick="calcResult()">=</button>
+            <button class="btn outline" onclick="calcInput('1')">1</button><button class="btn outline" onclick="calcInput('2')">2</button><button class="btn outline" onclick="calcInput('3')">3</button><button class="btn" style="grid-row: span 2; min-height:auto;" onclick="calcResult()">=</button>
             <button class="btn outline" style="grid-column: span 2;" onclick="calcInput('0')">0</button><button class="btn outline" onclick="calcInput('.')">.</button>
         </div>
     </div></div>
 
-    <div id="actionModal" class="modal"><div class="modal-content" style="text-align:center;">
+    <div id="actionModal" class="modal"><div class="modal-content" style="text-align:center; max-width:420px;">
         <h2 id="actionTitle">Atenção</h2>
-        <p id="actionMessage" style="color:#666; margin-bottom:20px;"></p>
-        <div id="actionInputContainer" style="display:none;"><input type="number" id="actionInput" style="text-align:center; font-size:20px;"></div>
+        <p id="actionMessage" style="color:#666; margin:0 0 18px;"></p>
+        <div id="actionInputContainer" style="display:none;"><input type="number" step="0.01" id="actionInput" style="text-align:center; font-size:20px;"></div>
         <div id="actionButtons" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <button id="actionConfirmBtn" class="btn">Confirmar</button>
             <button class="btn outline" onclick="fecharActionModal()">Cancelar</button>
@@ -376,21 +521,23 @@
         <div id="alertButtonContainer" style="display:none;"><button class="btn" onclick="fecharActionModal()">OK</button></div>
     </div></div>
 
-    <div id="exportAgendaModal" class="modal"><div class="modal-content">
-        <h2 style="text-align:center;">Exportar Agenda</h2>
-        <div id="lista-meses-export" style="background:#f9f9f9; padding:10px; border-radius:10px; margin-bottom:20px; max-height:200px; overflow-y:auto;"></div>
+    <div id="exportAgendaModal" class="modal"><div class="modal-content" style="max-width:440px;">
+        <h2>Exportar agenda</h2>
+        <p style="text-align:center; font-size:12px; color:#666; margin:0 0 12px;">Escolha os meses:</p>
+        <div id="lista-meses-export" class="check-box" style="max-height:170px; overflow-y:auto;"></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <button class="btn" onclick="prepararExportacao('PDF')">PDF</button>
-            <button class="btn" style="background:#4A4A4A;" onclick="prepararExportacao('IMAGEM')">IMAGEM</button>
+            <button class="btn gray" onclick="prepararExportacao('IMAGEM')">IMAGEM</button>
         </div>
         <button class="btn outline" style="margin-top:10px;" onclick="fecharExportAgendaModal()">VOLTAR</button>
     </div></div>
 
-    <div id="financeReportModal" class="modal"><div class="modal-content">
-        <h2 style="text-align:center;">Relatório Financeiro</h2>
-        <p style="text-align:center; font-size:12px; color:#666; margin-bottom:20px;">Filtrar por período:</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-            <input type="date" id="rep-inicio"><input type="date" id="rep-fim">
+    <div id="financeReportModal" class="modal"><div class="modal-content" style="max-width:440px;">
+        <h2>Relatório financeiro</h2>
+        <p style="text-align:center; font-size:12px; color:#666; margin:0 0 12px;">Filtrar por período:</p>
+        <div class="form-grid">
+            <div><label class="field" for="rep-inicio">De</label><input type="date" id="rep-inicio"></div>
+            <div><label class="field" for="rep-fim">Até</label><input type="date" id="rep-fim"></div>
         </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <button class="btn" onclick="gerarRelatorioFinanceiroPDF()">GERAR PDF</button>
@@ -403,16 +550,51 @@
         const FIN_KEY = "comunidade_v11_final_v4";
         const AGE_KEY = "comunidade_v11_agenda_v2";
         const HIS_KEY = "comunidade_v11_his_sorteio";
+        // Lista inicial vazia: os irmãos são cadastrados pelo botão "+" ou restaurados de um backup.
+        const DADOS_INICIAIS = [];
 
         let membros = [];
         let financeiro = { saldoInicial: 1384.94, movimentacoes: [] };
         let agenda = { eventos: [] };
         let historicoSorteios = [];
+        let sorteioAtual = null;
         let editandoId = null;
         let selectedDateStr = null;
         let currentCalendarDate = new Date();
         let movingEventId = null;
 
+        // ---------- Utilitários ----------
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+        const brl = v => 'R$ ' + (Number(v) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const dmy = ds => (ds || '').split('-').reverse().join('/');
+        function formatDateToISO(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+        function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+        function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function iniciais(n) { const p = String(n || '?').trim().split(/\s+/); return ((p[0][0] || '?') + (p.length > 1 ? p[p.length-1][0] : '')).toUpperCase(); }
+        const TONS = [['#FBEAEA','#A30000'],['#FFF3CD','#856404'],['#E8F0FE','#1967D2'],['#E6F4EA','#1E8E3E'],['#F3E8FD','#7B1FA2']];
+        function avatar(n, cls = '') { let h = 0; for (const c of String(n)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const [bg, fg] = TONS[h % TONS.length]; return `<div class="avatar ${cls}" style="background:${bg};color:${fg}">${esc(iniciais(n))}</div>`; }
+        function printHtml(html) {
+            if (window.Android && Android.print) { Android.print(html); return; }
+            const w = window.open('', '_blank'); if (w) { w.document.write(html); w.document.close(); w.focus(); w.print(); }
+        }
+        const PRINT_CSS = `<style>
+            body{font-family:'Inter',Arial,sans-serif;color:#202124;margin:22px;font-size:13px}
+            h1{font-family:'Crimson Text',serif;color:#A30000;margin:0 0 2px;font-size:26px}
+            h2{font-family:'Crimson Text',serif;color:#A30000;margin:18px 0 6px;font-size:19px}
+            .sub{color:#80868B;font-size:12px;margin-bottom:14px}
+            table{width:100%;border-collapse:collapse} th{background:#FBEAEA;color:#A30000;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+            th,td{padding:6px 8px;border-bottom:1px solid #E8EAED} td.n,th.n{text-align:right}
+            .cal td{border:1px solid #ddd;vertical-align:top;height:84px;width:14.28%;padding:4px;font-size:12px} .cal th{text-align:center;border:1px solid #ddd}
+            .ev{background:#FBEAEA;color:#A30000;border-radius:4px;padding:2px 4px;margin-top:3px;font-size:10.5px}
+            .grp{display:inline-block;vertical-align:top;width:30%;margin:0 1.5% 14px;border:1px solid #E8EAED;border-radius:10px;overflow:hidden}
+            .grp h3{margin:0;background:#FBEAEA;color:#A30000;padding:8px 12px;font-size:14px} .grp div{padding:5px 12px;border-top:1px solid #E8EAED}
+            .tot{font-weight:700} .pos{color:#1E8E3E} .neg{color:#D63031}
+        </style>`;
+        const docHtml = (titulo, sub, corpo) => `<!DOCTYPE html><html><head><meta charset="UTF-8">${PRINT_CSS}</head><body><h1>${esc(titulo)}</h1><div class="sub">${esc(sub)}</div>${corpo}</body></html>`;
+        const hoje = () => new Date().toLocaleDateString('pt-BR');
+
+        const NOMES_TAB = { comunidade: 'Gestão', sorteio: 'Sorteio', financeiro: 'Finanças', agenda: 'Agenda' };
         function switchTab(tab) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -421,10 +603,12 @@
 
             document.getElementById('btn-calc').style.display = (tab === 'financeiro') ? 'flex' : 'none';
             document.querySelector('.btn-add').style.display = (tab === 'comunidade') ? 'flex' : 'none';
+            document.getElementById('header-sub').innerText = NOMES_TAB[tab] || '';
 
             if (tab === 'financeiro') renderizarFinanceiro();
-            if (tab === 'agenda') renderCalendar();
+            if (tab === 'agenda') { renderCalendar(); renderProximosEventos(); }
             if (tab === 'comunidade') renderizarMembros();
+            if (tab === 'sorteio') atualizarInfoSorteio();
 
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if (btn.getAttribute('onclick')?.includes(`'${tab}'`)) btn.classList.add('active');
@@ -432,82 +616,242 @@
             window.scrollTo(0,0);
         }
 
-        // --- GESTÃO ---
+        // ---------- GESTÃO ----------
         function renderizarMembros(lista = membros) {
             const container = document.getElementById('lista-membros');
-            container.innerHTML = lista.sort((a,b) => a.nome.localeCompare(b.nome)).map(m => `
-                <div class="member-item" onclick="abrirModal(${m.id})">
-                    <div style="flex:1;">
-                        <strong>${shortenName(m.nome)}</strong><br>
-                        <div style="margin-top:4px;">
-                            ${m.isResponsavel ? '<span class="tag" style="background:var(--primary);color:white;">Resp</span>' : ''}
-                            <span class="tag tag-role">${m.role}</span>
+            const ordenada = lista.slice().sort((a,b) => (a.nome || '').localeCompare(b.nome || ''));
+            document.getElementById('lista-contagem').innerText = ordenada.length + (ordenada.length === 1 ? ' irmão' : ' irmãos');
+            if (!ordenada.length) {
+                container.innerHTML = `<div class="empty" style="grid-column:1/-1"><b>👥</b>${membros.length ? 'Nenhum irmão encontrado.' : 'Nenhum irmão cadastrado ainda.<br>Toque em <strong>+</strong> para adicionar, ou restaure um backup.'}</div>`;
+            } else {
+                container.innerHTML = ordenada.map(m => {
+                    const idade = m.nasc ? calcularIdade(m.nasc) : '';
+                    const conj = m.isCasal && m.conjugeId ? membros.find(x => x.id === m.conjugeId) : null;
+                    const away = m.afastado === true || m.ativo === false;
+                    return `<div class="member-item ${away ? 'away' : ''}" onclick="abrirModal(${m.id})">
+                        ${avatar(m.nome)}
+                        <div class="m-info">
+                            <strong>${esc(shortenName(m.nome))}</strong>
+                            <div class="m-sub">
+                                ${m.isResponsavel ? '<span class="tag tag-resp">Resp</span>' : ''}
+                                ${m.role && m.role !== 'Sem Função' ? `<span class="tag tag-role">${esc(m.role)}</span>` : ''}
+                                ${m.isCasal ? `<span class="tag tag-casal">Casal${conj ? ' · ' + esc(shortenName(conj.nome).split(' ')[0]) : ''}</span>` : ''}
+                                ${m.afastado ? '<span class="tag tag-away">Afastado</span>' : (m.ativo === false ? '<span class="tag tag-away">Inativo</span>' : '')}
+                                ${idade !== '' ? `<span>${idade} anos</span>` : ''}
+                            </div>
                         </div>
-                    </div>
-                    <span style="color:#ccc;">➔</span>
-                </div>`).join("");
+                        <span class="chev">›</span></div>`;
+                }).join("");
+            }
             renderDash();
+            renderAniversarios();
         }
 
         function renderDash() {
-            let ativos = membros.filter(m => m.ativo).length;
+            const ativos = membros.filter(m => m.ativo !== false && !m.afastado).length;
             document.getElementById('dashboard').innerHTML = `
                 <div class="dash-item full"><span>${membros.length}</span><label>Irmãos</label></div>
                 <div class="dash-item"><span>${ativos}</span><label>Ativos</label></div>
-                <div class="dash-item"><span>${membros.filter(m => m.isResponsavel).length}</span><label>Resps</label></div>
-            `;
+                <div class="dash-item"><span>${membros.filter(m => m.isResponsavel).length}</span><label>Responsáveis</label></div>`;
+        }
+
+        function renderAniversarios() {
+            const mes = new Date().getMonth() + 1;
+            const lista = membros.filter(m => m.nasc && parseInt(m.nasc.split('-')[1]) === mes)
+                .sort((a,b) => parseInt(a.nasc.split('-')[2]) - parseInt(b.nasc.split('-')[2]));
+            document.getElementById('aniversarios').innerHTML = lista.length ? `<div class="birthdays"><b>🎂</b><span><strong>Aniversariantes do mês:</strong> ${lista.map(m => `${esc(shortenName(m.nome).split(' ')[0])} (${parseInt(m.nasc.split('-')[2])})`).join(', ')}</span></div>` : '';
         }
 
         function filtrarLista() {
-            const t = document.getElementById('search').value.toLowerCase();
-            renderizarMembros(membros.filter(m => m.nome.toLowerCase().includes(t)));
+            const t = norm(document.getElementById('search').value);
+            renderizarMembros(membros.filter(m => norm(m.nome).includes(t)));
         }
+
+        function toggleConjuge() { document.getElementById('editConjugeSelect').style.display = document.getElementById('editIsCasal').checked ? 'block' : 'none'; }
 
         function abrirModal(id) {
             const m = membros.find(x => x.id === id);
+            if (!m) return;
             editandoId = id;
-            document.getElementById('editTitle').innerText = "Editar";
-            document.getElementById('editNome').value = m.nome;
+            document.getElementById('editTitle').innerText = "Editar irmão";
+            document.getElementById('editNome').value = m.nome || "";
             document.getElementById('editNasc').value = m.nasc || "";
             document.getElementById('editTel').value = m.tel || "";
             document.getElementById('editEndereco').value = m.endereco || "";
             document.getElementById('editRole').value = m.role || "Sem Função";
             document.getElementById('editAtivo').checked = m.ativo !== false;
             document.getElementById('editAfastado').checked = m.afastado === true;
+            document.getElementById('editVocacionado').checked = m.vocacionado === true;
             document.getElementById('editIsResponsavel').checked = m.isResponsavel === true;
             document.getElementById('editIsCasal').checked = m.isCasal || false;
             popularSelectConjuge(m.conjugeId);
-            document.getElementById('editConjugeSelect').style.display = m.isCasal ? 'block' : 'none';
+            toggleConjuge();
+            document.getElementById('btnExcluir').style.display = 'flex';
             document.getElementById('editModal').style.display = 'block';
         }
 
         function novoIrmao() {
             editandoId = null;
-            document.getElementById('editTitle').innerText = "Novo";
+            document.getElementById('editTitle').innerText = "Novo irmão";
             document.querySelectorAll('#editModal input:not([type=checkbox]), #editModal textarea').forEach(i => i.value = "");
+            document.getElementById('editRole').value = "Sem Função";
+            ['editAfastado','editVocacionado','editIsResponsavel','editIsCasal'].forEach(id => document.getElementById(id).checked = false);
             document.getElementById('editAtivo').checked = true;
+            popularSelectConjuge(null);
+            toggleConjuge();
+            document.getElementById('btnExcluir').style.display = 'none';
             document.getElementById('editModal').style.display = 'block';
         }
 
         function confirmarEdicao() {
-            if(!editandoId) { membros.push({ id: Date.now(), ativo: true }); editandoId = Date.now(); }
-            const m = membros.find(x => x.id === editandoId) || membros[membros.length-1];
-            m.nome = document.getElementById('editNome').value;
+            const nome = document.getElementById('editNome').value.trim();
+            if (!nome) return customAlert("Informe o nome do irmão.");
+            let m = editandoId ? membros.find(x => x.id === editandoId) : null;
+            if (!m) { m = { id: Date.now() }; membros.push(m); editandoId = m.id; }
+            m.nome = nome;
             m.nasc = document.getElementById('editNasc').value;
+            m.tel = document.getElementById('editTel').value.trim();
+            m.endereco = document.getElementById('editEndereco').value.trim();
             m.role = document.getElementById('editRole').value;
             m.ativo = document.getElementById('editAtivo').checked;
             m.afastado = document.getElementById('editAfastado').checked;
+            m.vocacionado = document.getElementById('editVocacionado').checked;
             m.isResponsavel = document.getElementById('editIsResponsavel').checked;
             m.isCasal = document.getElementById('editIsCasal').checked;
-            m.conjugeId = m.isCasal ? parseInt(document.getElementById('editConjugeSelect').value) : null;
-            localStorage.setItem(DB_KEY, JSON.stringify(membros));
-            fecharModal(); renderizarMembros();
+            const cj = parseInt(document.getElementById('editConjugeSelect').value);
+            m.conjugeId = m.isCasal && !isNaN(cj) ? cj : null;
+            save(DB_KEY, membros);
+            fecharModal(); filtrarLista();
         }
 
         function fecharModal() { document.getElementById('editModal').style.display = 'none'; }
-        function excluirMembro() { customConfirm("Excluir?", (c) => { if(c) { membros = membros.filter(x => x.id !== editandoId); localStorage.setItem(DB_KEY, JSON.stringify(membros)); fecharModal(); renderizarMembros(); } }); }
+        function excluirMembro() {
+            customConfirm("Excluir este irmão? Essa ação não pode ser desfeita.", (c) => {
+                if (!c) return;
+                membros = membros.filter(x => x.id !== editandoId);
+                membros.forEach(x => { if (x.conjugeId === editandoId) { x.conjugeId = null; x.isCasal = false; } });
+                save(DB_KEY, membros); fecharModal(); filtrarLista();
+            });
+        }
 
-        // --- FINANCEIRO ---
+        function exportarListaMembrosPDF() {
+            if (!membros.length) return customAlert("Não há irmãos cadastrados.");
+            const lista = membros.slice().sort((a,b) => (a.nome||'').localeCompare(b.nome||''));
+            const linhas = lista.map(m => `<tr><td>${esc(m.nome)}</td><td>${m.nasc ? dmy(m.nasc) + ' (' + calcularIdade(m.nasc) + ')' : ''}</td><td>${esc(m.tel)}</td><td>${esc(m.role && m.role !== 'Sem Função' ? m.role : '')}${m.isResponsavel ? ' · Resp.' : ''}</td><td>${m.afastado ? 'Afastado' : (m.ativo === false ? 'Inativo' : 'Ativo')}</td></tr>`).join('');
+            printHtml(docHtml('Comunidade 11', `Lista de irmãos · ${lista.length} cadastrados · ${hoje()}`,
+                `<table><tr><th>Nome</th><th>Nascimento</th><th>Telefone</th><th>Função</th><th>Situação</th></tr>${linhas}</table>`));
+        }
+
+        // ---------- SORTEIO ----------
+        function elegiveis() { return membros.filter(m => m.ativo !== false && !m.afastado); }
+        function atualizarInfoSorteio() {
+            const el = document.getElementById('sort-info'); if (!el) return;
+            const n = elegiveis().length;
+            el.innerText = n ? `${n} irmãos ativos participam do sorteio (afastados e inativos ficam de fora).` : 'Cadastre irmãos na aba Gestão para sortear.';
+            if (!document.getElementById('sort-data').value) document.getElementById('sort-data').value = formatDateToISO(new Date());
+        }
+
+        function gerarSorteio() {
+            const n = parseInt(document.getElementById('sort-n').value);
+            const data = document.getElementById('sort-data').value || formatDateToISO(new Date());
+            const manterCasais = document.getElementById('sort-casais').checked;
+            const el = elegiveis();
+            if (el.length < n) return customAlert(`Há apenas ${el.length} irmãos ativos para ${n} grupos.`);
+
+            const usados = new Set(), unidades = [];
+            shuffle(el).forEach(m => {
+                if (usados.has(m.id)) return;
+                usados.add(m.id);
+                const un = [m];
+                if (manterCasais && m.isCasal && m.conjugeId) {
+                    const c = el.find(x => x.id === m.conjugeId && !usados.has(x.id));
+                    if (c) { usados.add(c.id); un.push(c); }
+                }
+                unidades.push(un);
+            });
+            // Responsáveis primeiro, para ficarem espalhados entre os grupos
+            unidades.sort((a, b) => (b.some(x => x.isResponsavel) ? 1 : 0) - (a.some(x => x.isResponsavel) ? 1 : 0));
+            const grupos = Array.from({ length: n }, (_, i) => ({ nome: 'Grupo ' + (i + 1), ids: [] }));
+            unidades.forEach(un => {
+                const menor = grupos.reduce((p, g) => g.ids.length < p.ids.length ? g : p, grupos[0]);
+                un.forEach(m => menor.ids.push(m.id));
+            });
+            sorteioAtual = { data, grupos };
+            renderSorteio();
+        }
+
+        function renderSorteio() {
+            const box = document.getElementById('container-resultados');
+            if (!sorteioAtual) { box.style.display = 'none'; return; }
+            box.style.display = 'block';
+            document.getElementById('resultado-lista').innerHTML = sorteioAtual.grupos.map((g, gi) => `
+                <div class="group-card">
+                    <div class="group-head"><h3>${esc(g.nome)}</h3><span class="count">${g.ids.length}</span></div>
+                    ${g.ids.map(id => membros.find(x => x.id === id)).filter(Boolean).map(m => `
+                        <div class="group-row">${avatar(m.nome, 'sm')}<span class="nm">${esc(shortenName(m.nome))}</span>
+                            ${m.isResponsavel ? '<span class="tag tag-resp">Resp</span>' : ''}
+                            <button class="mv" onclick="abrirSwap(${m.id})" aria-label="Mover">⇄</button></div>`).join('') || '<div class="group-row" style="color:var(--muted)">Vazio</div>'}
+                </div>`).join('');
+        }
+
+        function abrirSwap(id) {
+            const m = membros.find(x => x.id === id); if (!m || !sorteioAtual) return;
+            const atual = sorteioAtual.grupos.findIndex(g => g.ids.includes(id));
+            document.getElementById('swapMembroName').innerText = shortenName(m.nome);
+            document.getElementById('swapGroupsList').innerHTML = sorteioAtual.grupos.map((g, gi) => gi === atual ? '' :
+                `<button class="btn outline swap-btn" onclick="moverMembro(${id}, ${gi})"><span>${esc(g.nome)}</span><span>${g.ids.length} irmãos</span></button>`).join('');
+            document.getElementById('swapModal').style.display = 'block';
+        }
+        function moverMembro(id, gi) {
+            sorteioAtual.grupos.forEach(g => g.ids = g.ids.filter(x => x !== id));
+            sorteioAtual.grupos[gi].ids.push(id);
+            fecharSwapModal(); renderSorteio();
+        }
+        function fecharSwapModal() { document.getElementById('swapModal').style.display = 'none'; }
+
+        function nomesDoGrupo(g) { return g.ids.map(id => membros.find(x => x.id === id)).filter(Boolean).map(m => shortenName(m.nome)); }
+
+        function confirmarSorteioEAgenda() {
+            if (!sorteioAtual) return;
+            const { data, grupos } = sorteioAtual;
+            historicoSorteios.unshift({ id: Date.now(), data, grupos: grupos.map(g => ({ nome: g.nome, ids: g.ids.slice(), membros: nomesDoGrupo(g) })) });
+            historicoSorteios = historicoSorteios.slice(0, 20);
+            save(HIS_KEY, historicoSorteios);
+            grupos.forEach((g, i) => agenda.eventos.push({ id: Date.now() + i + 1, data, desc: `${g.nome}: ${nomesDoGrupo(g).join(', ')}` }));
+            save(AGE_KEY, agenda);
+            renderHistoricoSorteios();
+            customAlert(`Sorteio lançado na agenda em ${dmy(data)}.`);
+        }
+
+        function renderHistoricoSorteios() {
+            document.getElementById('historico-sorteios').innerHTML = historicoSorteios.map(h =>
+                `<button class="chip" onclick="abrirHistorico(${h.id})">📋 ${dmy(h.data)} · ${h.grupos.length} grupos</button>`).join('');
+        }
+        function abrirHistorico(id) {
+            const h = historicoSorteios.find(x => x.id === id); if (!h) return;
+            sorteioAtual = { data: h.data, grupos: h.grupos.map(g => ({ nome: g.nome, ids: (g.ids || []).filter(i => membros.some(m => m.id === i)) })) };
+            document.getElementById('sort-data').value = h.data;
+            renderSorteio();
+        }
+
+        function textoGrupos() {
+            return `*Sorteio de grupos - ${dmy(sorteioAtual.data)}*\n\n` + sorteioAtual.grupos.map(g => `*${g.nome}*\n` + nomesDoGrupo(g).map(n => '• ' + n).join('\n')).join('\n\n');
+        }
+        function copiarGruposWhatsApp() {
+            if (!sorteioAtual) return;
+            const t = textoGrupos();
+            if (window.Android && Android.copyText) { Android.copyText(t); return; }
+            const ok = () => customAlert("Grupos copiados! Cole no WhatsApp.");
+            if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, () => customAlert("Não foi possível copiar."));
+            else customAlert("Não foi possível copiar.");
+        }
+        function exportarGruposParaImpressao() {
+            if (!sorteioAtual) return;
+            const corpo = sorteioAtual.grupos.map(g => `<div class="grp"><h3>${esc(g.nome)} (${g.ids.length})</h3>${nomesDoGrupo(g).map(n => `<div>${esc(n)}</div>`).join('')}</div>`).join('');
+            printHtml(docHtml('Comunidade 11', `Sorteio de grupos · ${dmy(sorteioAtual.data)}`, corpo));
+        }
+
+        // ---------- FINANCEIRO ----------
         function renderizarFinanceiro() {
             const lColetas = document.getElementById('lista-coletas');
             const lSaidas = document.getElementById('lista-saidas');
@@ -517,67 +861,101 @@
 
             financeiro.movimentacoes.forEach(m => {
                 const total = m.valor, pago = m.valorPago || 0, restante = total - pago;
-                const perc = Math.round((pago / total) * 100);
+                const perc = total ? Math.min(100, Math.round((pago / total) * 100)) : 0;
 
                 if (m.tipo === 'entrada') {
                     saldo += total;
-                    hC += `<div class="fin-item income"><span>${m.desc} (${m.data.split('-').reverse().slice(0,2).join('/')})</span><strong>+ R$ ${total.toLocaleString('pt-BR')}</strong></div>`;
+                    hC += `<div class="fin-item income"><span>${esc(m.desc)}<small>${dmy(m.data)}</small></span><strong>+ ${brl(total)}</strong></div>`;
                 } else if (m.tipo === 'saida') {
                     if (m.status === 'pago') {
-                        saldo -= total;
-                        hS += `<div class="fin-item debt"><span>${m.desc}</span><strong>- R$ ${total.toLocaleString('pt-BR')}</strong></div>`;
+                        // Dívida já quitada: cada pagamento foi lançado como "PAGTO", então ela não entra de novo no caixa.
+                        if (!(m.valorPago > 0)) {
+                            saldo -= total;
+                            hS += `<div class="fin-item debt"><span>${esc(m.desc)}<small>${dmy(m.data)}</small></span><strong>- ${brl(total)}</strong></div>`;
+                        }
                     } else {
                         totalD += restante;
-                        hD += `<div class="card" style="padding:15px; margin-bottom:10px; border-left: 5px solid #d63031;">
-                            <strong>${m.desc}</strong><br><small>Total: R$ ${total.toLocaleString('pt-BR')}</small>
+                        hD += `<div class="debt-card">
+                            <div style="display:flex; justify-content:space-between; gap:8px; align-items:baseline;"><strong>${esc(m.desc)}</strong><small style="color:var(--muted)">Total ${brl(total)}</small></div>
                             <div class="progress-container"><div class="progress-bar" style="width: ${perc}%"></div></div>
-                            <div style="display:flex; justify-content:space-between; font-size:12px;">
-                                <span style="color:green">Pago: R$ ${pago.toLocaleString('pt-BR')}</span>
-                                <span style="color:red">Falta: R$ ${restante.toLocaleString('pt-BR')}</span>
+                            <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600;">
+                                <span style="color:var(--success)">Pago ${brl(pago)}</span>
+                                <span style="color:var(--danger)">Falta ${brl(restante)}</span>
                             </div>
-                            <button class="btn outline" style="margin-top:10px; padding:5px; font-size:12px;" onclick="pagarDivida('${m.id}')">PAGAR</button>
+                            <button class="btn outline sm" style="margin-top:10px; width:100%;" onclick="pagarDivida('${m.id}')">PAGAR</button>
                         </div>`;
                     }
                 }
             });
-            document.getElementById('total-caixa').innerText = `R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('total-dividas').innerText = `R$ ${totalD.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            lColetas.innerHTML = hC || "Sem coletas."; lSaidas.innerHTML = hS || "Sem saídas."; lDividas.innerHTML = hD || "Sem dívidas.";
+            document.getElementById('total-caixa').innerText = brl(saldo);
+            document.getElementById('total-dividas').innerText = brl(totalD);
+            lColetas.innerHTML = hC || '<div class="empty"><b>🪙</b>Sem coletas.</div>';
+            lSaidas.innerHTML = hS || '<div class="empty"><b>🧾</b>Sem saídas.</div>';
+            lDividas.innerHTML = hD || '<div class="empty"><b>✅</b>Nenhuma dívida pendente.</div>';
         }
 
         function adicionarMovimentacao(tipo) {
             const v = parseFloat(document.getElementById(tipo === 'entrada' ? 'fin-valor' : 'fin-valor-gasto').value);
             const d = document.getElementById(tipo === 'entrada' ? 'fin-data' : 'fin-desc').value;
-            if(isNaN(v) || !d) return customAlert("Preencha os campos!");
+            if (isNaN(v) || v <= 0 || !d) return customAlert("Preencha os campos!");
 
             financeiro.movimentacoes.unshift({ id: Date.now(), tipo, data: document.getElementById('fin-data').value || formatDateToISO(new Date()), valor: v, desc: tipo === 'entrada' ? "Coleta" : d, status: tipo === 'entrada' ? 'pago' : 'pendente', valorPago: 0 });
-            localStorage.setItem(FIN_KEY, JSON.stringify(financeiro));
+            save(FIN_KEY, financeiro);
+            ['fin-valor', 'fin-valor-gasto', 'fin-desc'].forEach(i => document.getElementById(i).value = '');
             renderizarFinanceiro();
         }
 
         function pagarDivida(id) {
             const m = financeiro.movimentacoes.find(x => x.id == id);
+            if (!m) return;
             const falta = m.valor - (m.valorPago || 0);
-            showActionModal("Pagamento", `Dívida: ${m.desc}. Falta R$ ${falta}`, (val) => {
+            showActionModal("Pagamento", `Dívida: ${m.desc}. Falta ${brl(falta)}`, (val) => {
                 const p = parseFloat(val);
-                if(isNaN(p) || p <= 0) return;
+                if (isNaN(p) || p <= 0) return;
                 m.valorPago = (m.valorPago || 0) + p;
-                if(m.valorPago >= m.valor - 0.01) m.status = 'pago';
+                if (m.valorPago >= m.valor - 0.01) m.status = 'pago';
                 financeiro.movimentacoes.unshift({ id: Date.now(), tipo: 'saida', data: formatDateToISO(new Date()), valor: p, desc: `PAGTO: ${m.desc}`, status: 'pago' });
-                localStorage.setItem(FIN_KEY, JSON.stringify(financeiro));
+                save(FIN_KEY, financeiro);
                 renderizarFinanceiro();
             }, { isPrompt: true, defaultValue: falta.toFixed(2) });
         }
 
-        // --- AGENDA / SORTEIO / UTILIDADES ---
+        function abrirFinanceReportModal() {
+            const h = new Date();
+            document.getElementById('rep-inicio').value = formatDateToISO(new Date(h.getFullYear(), h.getMonth(), 1));
+            document.getElementById('rep-fim').value = formatDateToISO(h);
+            document.getElementById('financeReportModal').style.display = 'block';
+        }
+        function fecharFinanceReportModal() { document.getElementById('financeReportModal').style.display = 'none'; }
+        function gerarRelatorioFinanceiroPDF() {
+            const ini = document.getElementById('rep-inicio').value, fim = document.getElementById('rep-fim').value;
+            if (!ini || !fim || ini > fim) return customAlert("Informe um período válido.");
+            const dentro = m => m.data >= ini && m.data <= fim;
+            const ent = financeiro.movimentacoes.filter(m => m.tipo === 'entrada' && dentro(m));
+            const sai = financeiro.movimentacoes.filter(m => m.tipo === 'saida' && m.status === 'pago' && !(m.valorPago > 0) && dentro(m));
+            const tEnt = ent.reduce((s, m) => s + m.valor, 0), tSai = sai.reduce((s, m) => s + m.valor, 0);
+            const pend = financeiro.movimentacoes.filter(m => m.tipo === 'saida' && m.status !== 'pago');
+            const tPend = pend.reduce((s, m) => s + m.valor - (m.valorPago || 0), 0);
+            const tab = (arr, cls) => arr.length ? `<table><tr><th>Data</th><th>Descrição</th><th class="n">Valor</th></tr>${arr.map(m => `<tr><td>${dmy(m.data)}</td><td>${esc(m.desc)}</td><td class="n ${cls}">${brl(m.valor)}</td></tr>`).join('')}</table>` : '<p class="sub">Nenhum lançamento no período.</p>';
+            const corpo = `<h2>Resumo do período</h2><table>
+                <tr><td>Entradas</td><td class="n pos">${brl(tEnt)}</td></tr><tr><td>Saídas</td><td class="n neg">${brl(tSai)}</td></tr>
+                <tr class="tot"><td>Resultado do período</td><td class="n ${tEnt - tSai >= 0 ? 'pos' : 'neg'}">${brl(tEnt - tSai)}</td></tr>
+                <tr><td>Dívidas pendentes (total atual)</td><td class="n neg">${brl(tPend)}</td></tr></table>
+                <h2>Coletas</h2>${tab(ent, 'pos')}<h2>Saídas</h2>${tab(sai, 'neg')}
+                ${pend.length ? `<h2>Dívidas pendentes</h2><table><tr><th>Descrição</th><th class="n">Total</th><th class="n">Falta</th></tr>${pend.map(m => `<tr><td>${esc(m.desc)}</td><td class="n">${brl(m.valor)}</td><td class="n neg">${brl(m.valor - (m.valorPago || 0))}</td></tr>`).join('')}</table>` : ''}`;
+            fecharFinanceReportModal();
+            printHtml(docHtml('Comunidade 11', `Relatório financeiro · ${dmy(ini)} a ${dmy(fim)}`, corpo));
+        }
+
+        // ---------- AGENDA ----------
         function renderCalendar() {
             const container = document.getElementById('calendar-days');
             const year = currentCalendarDate.getFullYear(), month = currentCalendarDate.getMonth();
             document.getElementById('current-month-year').innerText = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentCalendarDate).toUpperCase();
             const first = new Date(year, month, 1).getDay(), last = new Date(year, month + 1, 0).getDate();
             let h = "";
-            for(let i=0; i<first; i++) h += `<div></div>`;
-            for(let i=1; i<=last; i++) {
+            for (let i = 0; i < first; i++) h += `<div></div>`;
+            for (let i = 1; i <= last; i++) {
                 const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const hasE = agenda.eventos.some(e => e.data === ds);
                 const isT = new Date().toDateString() === new Date(year, month, i).toDateString();
@@ -586,41 +964,90 @@
             container.innerHTML = h;
         }
 
+        function renderProximosEventos() {
+            const hj = formatDateToISO(new Date());
+            const prox = agenda.eventos.filter(e => e.data >= hj).sort((a, b) => a.data.localeCompare(b.data)).slice(0, 5);
+            document.getElementById('proximos-eventos').innerHTML = prox.map(e => {
+                const [y, m, d] = e.data.split('-').map(Number);
+                const mes = new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+                return `<div class="ev-next"><div class="ev-date">${d}<small>${mes}</small></div><span>${esc(e.desc)}</span></div>`;
+            }).join('') || '<div class="empty"><b>📅</b>Nenhum evento próximo.</div>';
+        }
+
         function selectDate(ds) {
-            if(movingEventId) {
+            if (movingEventId) {
                 const e = agenda.eventos.find(x => x.id == movingEventId);
-                if(e) { e.data = ds; movingEventId = null; localStorage.setItem(AGE_KEY, JSON.stringify(agenda)); renderCalendar(); renderEventsList(); return; }
+                if (e) { e.data = ds; movingEventId = null; save(AGE_KEY, agenda); renderCalendar(); renderEventsList(); renderProximosEventos(); return; }
             }
             selectedDateStr = ds; renderCalendar(); renderEventsList();
             document.getElementById('events-card').style.display = 'block';
-            document.getElementById('selected-date-title').innerText = ds.split('-').reverse().join('/');
+            document.getElementById('events-hint').style.display = 'none';
+            document.getElementById('selected-date-title').innerText = dmy(ds);
         }
+
+        function removerEvento(id) {
+            agenda.eventos = agenda.eventos.filter(i => i.id != id);
+            save(AGE_KEY, agenda); renderEventsList(); renderCalendar(); renderProximosEventos();
+        }
+        function moverEvento(id) { movingEventId = id; customAlert('Selecione o novo dia no calendário.'); }
 
         function renderEventsList() {
             const e = agenda.eventos.filter(x => x.data === selectedDateStr);
             document.getElementById('events-list').innerHTML = e.map(x => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#f8f9fa; border-radius:10px; margin-bottom:5px;">
-                    <span style="font-size:13px;">${x.desc}</span>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="movingEventId='${x.id}';customAlert('Selecione o novo dia');" style="border:none; background:none;">📍</button>
-                        <button onclick="agenda.eventos=agenda.eventos.filter(i=>i.id!=${x.id});localStorage.setItem(AGE_KEY,JSON.stringify(agenda));renderEventsList();renderCalendar();" style="border:none; background:none; color:red;">✕</button>
-                    </div>
-                </div>`).join("") || "Vazio.";
+                <div class="ev-row"><span>${esc(x.desc)}</span>
+                    <button onclick="moverEvento('${x.id}')" aria-label="Mover evento">📍</button>
+                    <button onclick="removerEvento('${x.id}')" style="color:var(--danger)" aria-label="Excluir evento">✕</button>
+                </div>`).join("") || '<div class="empty" style="padding:10px">Nenhum evento neste dia.</div>';
         }
 
         function addCalendarEvent() {
-            const d = document.getElementById('new-event-desc').value;
-            if(!d || !selectedDateStr) return;
+            const d = document.getElementById('new-event-desc').value.trim();
+            if (!d || !selectedDateStr) return;
             agenda.eventos.push({ id: Date.now(), data: selectedDateStr, desc: d });
-            localStorage.setItem(AGE_KEY, JSON.stringify(agenda));
+            save(AGE_KEY, agenda);
             document.getElementById('new-event-desc').value = "";
-            renderEventsList(); renderCalendar();
+            renderEventsList(); renderCalendar(); renderProximosEventos();
         }
 
-        function changeMonth(v) { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + v); renderCalendar(); }
-        function shortenName(n) { return n ? n.split(' ')[0] + ' ' + (n.split(' ').slice(-1)[0] || '') : ""; }
+        function changeMonth(v) { currentCalendarDate = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + v, 1); renderCalendar(); }
+
+        const nomeMes = (y, m) => new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(new Date(y, m, 1));
+        function abrirExportAgendaModal() {
+            const atual = formatDateToISO(new Date()).slice(0, 7);
+            const meses = new Set([atual, ...agenda.eventos.map(e => e.data.slice(0, 7))]);
+            document.getElementById('lista-meses-export').innerHTML = [...meses].sort().map(k => {
+                const [y, m] = k.split('-').map(Number), n = agenda.eventos.filter(e => e.data.startsWith(k)).length;
+                return `<label class="check-row"><input type="checkbox" value="${k}" ${k >= atual ? 'checked' : ''}> ${nomeMes(y, m - 1)} <small>${n} evento${n === 1 ? '' : 's'}</small></label>`;
+            }).join('');
+            document.getElementById('exportAgendaModal').style.display = 'block';
+        }
+        function fecharExportAgendaModal() { document.getElementById('exportAgendaModal').style.display = 'none'; }
+        function calendarioMesHtml(y, m) {
+            const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
+            const cel = [];
+            for (let i = 0; i < first; i++) cel.push('<td></td>');
+            for (let d = 1; d <= last; d++) {
+                const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                cel.push(`<td><b>${d}</b>${agenda.eventos.filter(e => e.data === ds).map(e => `<div class="ev">${esc(e.desc)}</div>`).join('')}</td>`);
+            }
+            while (cel.length % 7) cel.push('<td></td>');
+            let linhas = ''; for (let i = 0; i < cel.length; i += 7) linhas += `<tr>${cel.slice(i, i + 7).join('')}</tr>`;
+            return `<h2 style="text-transform:capitalize">${nomeMes(y, m)}</h2><table class="cal"><tr><th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th></tr>${linhas}</table>`;
+        }
+        function prepararExportacao(tipo) {
+            const sel = [...document.querySelectorAll('#lista-meses-export input:checked')].map(i => i.value).sort();
+            if (!sel.length) return customAlert("Selecione ao menos um mês.");
+            const corpo = sel.map(k => { const [y, m] = k.split('-').map(Number); return calendarioMesHtml(y, m - 1); }).join('');
+            const html = docHtml('Comunidade 11', 'Agenda', corpo);
+            fecharExportAgendaModal();
+            if (tipo === 'IMAGEM' && window.Android && Android.shareAsImage) Android.shareAsImage(html);
+            else printHtml(html);
+        }
+
+        // ---------- Utilidades ----------
+        function shortenName(n) { if (!n) return ""; const p = n.trim().split(/\s+/); return p.length > 1 ? p[0] + ' ' + p[p.length - 1] : p[0]; }
         function calcularIdade(n, ref = new Date()) { if(!n) return ""; const [y,m,d] = n.split('-').map(Number); const b = new Date(y, m-1, d); let i = ref.getFullYear() - b.getFullYear(); if(ref.getMonth() < b.getMonth() || (ref.getMonth() === b.getMonth() && ref.getDate() < b.getDate())) i--; return i; }
-        function popularSelectConjuge(sel = null) { const s = document.getElementById('editConjugeSelect'); s.innerHTML = '<option value="">Selecione</option>' + membros.filter(m => m.id !== editandoId).map(m => `<option value="${m.id}" ${sel == m.id ? 'selected' : ''}>${m.nome}</option>`).join(""); }
+        function popularSelectConjuge(sel = null) { const s = document.getElementById('editConjugeSelect'); s.innerHTML = '<option value="">Selecione</option>' + membros.filter(m => m.id !== editandoId).map(m => `<option value="${m.id}" ${sel == m.id ? 'selected' : ''}>${esc(m.nome)}</option>`).join(""); }
 
         function showActionModal(t, m, cb, o = {}) {
             document.getElementById('actionTitle').innerText = t; document.getElementById('actionMessage').innerText = m;
@@ -637,14 +1064,69 @@
         function fecharCalculadora() { document.getElementById('calcModal').style.display = 'none'; }
         function calcInput(v) { document.getElementById('calc-display').value += v; }
         function calcClear() { document.getElementById('calc-display').value = ""; }
-        function calcResult() { try { document.getElementById('calc-display').value = eval(document.getElementById('calc-display').value); } catch(e) { document.getElementById('calc-display').value = "Erro"; } }
+        function calcAvaliar(expr) {
+            // Avaliador seguro (+ - * / e parênteses), sem eval()
+            const t = expr.replace(/\s+/g, '').match(/\d+\.?\d*|\.\d+|[-+*\/()]/g);
+            if (!t || t.join('') !== expr.replace(/\s+/g, '')) throw new Error('expr');
+            let i = 0;
+            const prim = () => {
+                const k = t[i++];
+                if (k === '-') return -prim();
+                if (k === '+') return prim();
+                if (k === '(') { const v = soma(); if (t[i++] !== ')') throw new Error('par'); return v; }
+                const n = parseFloat(k);
+                if (isNaN(n)) throw new Error('num');
+                return n;
+            };
+            const mult = () => { let v = prim(); while (t[i] === '*' || t[i] === '/') { const o = t[i++]; const r = prim(); v = o === '*' ? v * r : v / r; } return v; };
+            const soma = () => { let v = mult(); while (t[i] === '+' || t[i] === '-') { const o = t[i++]; const r = mult(); v = o === '+' ? v + r : v - r; } return v; };
+            const r = soma();
+            if (i !== t.length || !isFinite(r)) throw new Error('fim');
+            return Math.round(r * 1e10) / 1e10;
+        }
+        function calcResult() { const d = document.getElementById('calc-display'); try { d.value = calcAvaliar(d.value); } catch(e) { d.value = "Erro"; } }
+
+        // --- Backup / Restauração ---
+        function exportarBackup() {
+            const dados = { app: "Comunidade 11", versao: 1, exportadoEm: new Date().toISOString(),
+                membros: membros, financeiro: financeiro, agenda: agenda, historico: historicoSorteios };
+            const json = JSON.stringify(dados, null, 2);
+            const nome = "backup_comunidade11_" + new Date().toISOString().slice(0, 10) + ".json";
+            if (window.Android && Android.saveBackup) { Android.saveBackup(json, nome); }
+            else { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json], {type: 'application/json'})); a.download = nome; a.click(); }
+        }
+        function importarBackup(input) {
+            const f = input.files && input.files[0];
+            input.value = "";
+            if (!f) return;
+            const r = new FileReader();
+            r.onload = () => {
+                let d;
+                try { d = JSON.parse(r.result); } catch (e) { return customAlert("Arquivo inválido: não é um backup do app."); }
+                if (!d || d.app !== "Comunidade 11" || !Array.isArray(d.membros) || !d.financeiro || !d.agenda) {
+                    return customAlert("Arquivo inválido: não é um backup do Comunidade 11.");
+                }
+                customConfirm("Restaurar o backup? Os dados atuais deste aparelho serão substituídos.", (c) => {
+                    if (!c) return;
+                    localStorage.setItem(DB_KEY, JSON.stringify(d.membros));
+                    localStorage.setItem(FIN_KEY, JSON.stringify(d.financeiro));
+                    localStorage.setItem(AGE_KEY, JSON.stringify(d.agenda));
+                    localStorage.setItem(HIS_KEY, JSON.stringify(d.historico || []));
+                    location.reload();
+                });
+            };
+            r.readAsText(f);
+        }
 
         // Inicialização
-        membros = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-        if(membros.length === 0) { membros = DADOS_INICIAIS; localStorage.setItem(DB_KEY, JSON.stringify(membros)); }
-        financeiro = JSON.parse(localStorage.getItem(FIN_KEY) || '{"saldoInicial": 1384.94, "movimentacoes": []}');
-        agenda = JSON.parse(localStorage.getItem(AGE_KEY) || '{"eventos":[]}');
-        historicoSorteios = JSON.parse(localStorage.getItem(HIS_KEY) || "[]");
+        function lerJson(key, padrao) { try { const v = JSON.parse(localStorage.getItem(key)); return v ?? padrao; } catch (e) { return padrao; } }
+        membros = lerJson(DB_KEY, []);
+        if (!Array.isArray(membros) || membros.length === 0) { membros = DADOS_INICIAIS.slice(); save(DB_KEY, membros); }
+        financeiro = lerJson(FIN_KEY, { saldoInicial: 1384.94, movimentacoes: [] });
+        agenda = lerJson(AGE_KEY, { eventos: [] });
+        historicoSorteios = lerJson(HIS_KEY, []);
+        document.getElementById('fin-data').value = formatDateToISO(new Date());
+        renderHistoricoSorteios();
 
         switchTab('comunidade');
     </script>
