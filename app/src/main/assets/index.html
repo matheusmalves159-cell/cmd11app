@@ -241,9 +241,14 @@
         .group-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 12px; }
         .group-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
         .group-head { background: var(--primary-soft); color: var(--primary); display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; }
-        .group-head { flex-wrap: wrap; gap: 6px 10px; }
-        .gdata-l { flex: 1 1 45%; font-size: 12px; color: var(--secondary); font-weight: 600; }
-        .group-head .gdata { margin: 2px 0 0; padding: 6px 10px; font-size: 13px; background: #fff; }
+        .group-dates { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 10px 12px 4px; }
+        .gd-tile { display: flex; align-items: center; gap: 10px; background: var(--primary-soft); border: 1px solid #E8DBC2; border-radius: 12px; padding: 8px 10px; cursor: pointer; min-width: 0; }
+        .gd-tile .gd-ico { width: 34px; height: 34px; flex: none; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+        .gd-tile.euc .gd-ico { background: var(--primary-dark); }
+        .gd-tile .gd-txt { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+        .gd-tile .gd-lbl { font-size: 10.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--primary); line-height: 1.2; }
+        .gd-tile .gd-lbl small { white-space: nowrap; text-transform: none; letter-spacing: 0; font-weight: 600; opacity: .75; }
+        .gd-tile input.gdata { border: none; background: transparent; padding: 0; margin: 2px 0 0; font-size: 15px; font-weight: 700; color: var(--text, #3b2d1c); width: 100%; min-width: 0; box-shadow: none; }
         .group-head h3 { margin: 0; font-family: 'Crimson Text', serif; font-size: 18px; }
         .group-head .count { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 10px; }
         .group-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 1px solid var(--border); font-size: 13.5px; }
@@ -968,7 +973,11 @@
             document.getElementById('sort-aviso').innerText = aviso;
             document.getElementById('resultado-lista').innerHTML = sorteioAtual.grupos.map((g, gi) => `
                 <div class="group-card">
-                    <div class="group-head"><h3>${esc(g.nome)}</h3><span class="count">${g.ids.length}</span><label class="gdata-l">Celebração (terça)<input type="date" class="gdata" value="${g.celeb || ''}" onchange="mudarDataGrupo(${gi}, 'celeb', this.value)"></label><label class="gdata-l">Eucaristia (sábado)<input type="date" class="gdata" value="${g.euc || ''}" onchange="mudarDataGrupo(${gi}, 'euc', this.value)"></label></div>
+                    <div class="group-head"><h3>${esc(g.nome)}</h3><span class="count">${g.ids.length}</span></div>
+                    <div class="group-dates">
+                        <label class="gd-tile"><span class="gd-ico">🕯️</span><span class="gd-txt"><span class="gd-lbl">Celebração <small>· terça</small></span><input type="date" class="gdata" value="${g.celeb || ''}" onchange="mudarDataGrupo(${gi}, 'celeb', this.value)"></span></label>
+                        <label class="gd-tile euc"><span class="gd-ico">✝️</span><span class="gd-txt"><span class="gd-lbl">Eucaristia <small>· sábado</small></span><input type="date" class="gdata" value="${g.euc || ''}" onchange="mudarDataGrupo(${gi}, 'euc', this.value)"></span></label>
+                    </div>
                     ${membrosDoGrupo(g).map(m => `
                         <div class="group-row">${avatar(m.nome, 'sm')}<span class="nm">${esc(shortenName(m.nome))}</span>
                             ${m.isResponsavel ? '<span class="tag tag-resp">Resp</span>' : ''}
