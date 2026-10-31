@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             val channel = android.app.NotificationChannel("COMUNIDADE_11", name, importance).apply {
                 description = descriptionText
                 enableLights(true)
-                lightColor = android.graphics.Color.RED
+                lightColor = android.graphics.Color.rgb(140, 107, 69)
                 enableVibration(true)
                 setSound(android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION), null)
                 setShowBadge(true)

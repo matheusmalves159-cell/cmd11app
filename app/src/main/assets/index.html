@@ -7,19 +7,19 @@
     <link href="fonts/fonts.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #A30000;
-            --primary-dark: #7A0000;
-            --primary-soft: #FBEAEA;
+            --primary: #8C6B45;
+            --primary-dark: #6E5233;
+            --primary-soft: #F6EEE0;
             --secondary: #5F6368;
-            --bg: #F8F9FA;
+            --bg: #FBF7F0;
             --card: #FFFFFF;
             --text: #202124;
             --muted: #80868B;
             --border: #E8EAED;
             --success: #1E8E3E;
             --success-soft: #E6F4EA;
-            --danger: #D63031;
-            --danger-soft: #FDECEC;
+            --danger: #9A6A2F;
+            --danger-soft: #F7EEDD;
             --warning: #F9AB00;
             --radius: 16px;
             --radius-sm: 12px;
@@ -41,29 +41,30 @@
 
         /* ---------- Cabeçalho ---------- */
         header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: linear-gradient(135deg, #F5ECDB 0%, #EADDC3 100%);
+            color: #4A3820;
             padding: 8px 16px;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             gap: 12px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(122,0,0,.25);
+            box-shadow: 0 2px 8px rgba(110,82,51,.18);
         }
         .brand-logo {
-            width: 32px; height: 32px; border-radius: 50%;
+            width: 56px; height: 56px; border-radius: 50%;
             background: #fff; object-fit: cover; flex-shrink: 0;
-            border: 2px solid rgba(255,255,255,.55);
+            border: 2px solid rgba(140,107,69,.35);
         }
         header h1 {
             margin: 0; font-family: 'Crimson Text', serif; font-weight: 700;
             letter-spacing: .5px; font-size: 20px; line-height: 1.1;
         }
         .header-sub {
-            margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: .8px;
-            text-transform: uppercase; background: rgba(255,255,255,.16);
+            justify-self: end; font-size: 11px; font-weight: 600; letter-spacing: .8px;
+            text-transform: uppercase; background: rgba(140,107,69,.14); color: #5A4426;
             padding: 5px 12px; border-radius: 999px;
         }
 
@@ -116,6 +117,14 @@
             background: #fff; padding: 12px 8px; border-radius: var(--radius-sm); text-align: center;
             border: 1px solid var(--border); box-shadow: var(--shadow);
         }
+        #dashboard .click { cursor: pointer; transition: transform .1s; }
+        #dashboard .click:active { transform: scale(.97); }
+        #dashboard .dash-item.sel { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-color: var(--primary-dark); }
+        #dashboard .dash-item.full:not(.sel) { background: #fff; border: 1px solid var(--border); }
+        #dashboard .dash-item.full:not(.sel) span { color: var(--primary); }
+        #dashboard .dash-item.full:not(.sel) label { color: var(--secondary); }
+        #dashboard .dash-item.sel span { color: #fff; }
+        #dashboard .dash-item.sel label { color: rgba(255,255,255,.85); }
         .dash-item.full { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; }
         .dash-item span { display: block; font-size: 24px; font-weight: 700; color: var(--primary); line-height: 1.15; }
         .dash-item.full span { color: white; }
@@ -127,7 +136,7 @@
         .dash-item.caixa { background: linear-gradient(135deg, #1E8E3E, #146C2E); border: none; }
         .dash-item.caixa span, .dash-item.caixa label { color: #fff; }
         .dash-item.caixa label { opacity: .85; }
-        .dash-item.divida { border-color: #F3C4C4; background: var(--danger-soft); }
+        .dash-item.divida { border-color: #E6D3B0; background: var(--danger-soft); }
         .dash-item.divida span { color: var(--danger); }
 
         /* ---------- Botões ---------- */
@@ -192,7 +201,10 @@
         }
         .avatar.sm { width: 30px; height: 30px; font-size: 11px; }
         .m-info { flex: 1; min-width: 0; }
-        .m-info strong { display: block; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .m-info strong { display: block; font-size: 14.5px; overflow-wrap: anywhere; }
+        .m-det { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 4px; font-size: 12px; color: var(--secondary); }
+        .m-det span { white-space: nowrap; }
+        .m-det .addr { white-space: normal; }
         .m-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 3px; font-size: 11px; color: var(--muted); }
         .chev { color: #C4C7CC; font-size: 22px; line-height: 1; }
         .tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; display: inline-block; }
@@ -282,7 +294,7 @@
         @media (orientation: landscape) and (max-height: 560px) {
             body { padding-left: var(--rail); padding-bottom: 0; }
             header { padding: 5px 16px; }
-            .brand-logo { width: 28px; height: 28px; }
+            .brand-logo { width: 46px; height: 46px; }
             header h1 { font-size: 18px; }
             .tab-bar {
                 top: 0; bottom: 0; right: auto; left: 0; width: var(--rail); height: auto;
@@ -320,8 +332,8 @@
 <body>
 
     <header>
+        <span aria-hidden="true"></span>
         <img class="brand-logo" src="logo.png" alt="">
-        <h1>Comunidade 11</h1>
         <span class="header-sub" id="header-sub">Gestão</span>
     </header>
 
@@ -334,6 +346,7 @@
             <div class="search-wrap">
                 <input type="search" id="search" placeholder="🔍  Buscar irmão..." oninput="filtrarLista()">
             </div>
+            <div id="filtros-membros" class="chips"></div>
             <div class="list-meta"><span id="lista-contagem"></span><span>Toque para editar</span></div>
             <div id="lista-membros"></div>
         </div>
@@ -398,6 +411,16 @@
                         <div><label class="field" for="fin-valor">Valor</label><input type="number" step="0.01" inputmode="decimal" id="fin-valor" placeholder="R$ 0,00"></div>
                     </div>
                     <button class="btn" onclick="adicionarMovimentacao('entrada')">REGISTRAR ENTRADA</button>
+                </div>
+                <div class="card">
+                    <h2>Registrar Saída</h2>
+                    <p style="margin:0 0 10px; font-size:12px; color:var(--muted);">Valor que já foi gasto e sai do caixa na hora.</p>
+                    <input type="text" id="saida-desc" placeholder="O que foi comprado/pago">
+                    <div class="form-grid">
+                        <div><label class="field" for="saida-data">Data</label><input type="date" id="saida-data"></div>
+                        <div><label class="field" for="saida-valor">Valor</label><input type="number" step="0.01" inputmode="decimal" id="saida-valor" placeholder="R$ 0,00"></div>
+                    </div>
+                    <button class="btn" style="background:var(--danger);" onclick="registrarSaida()">REGISTRAR SAÍDA</button>
                 </div>
                 <div class="card">
                     <h2>Nova Dívida</h2>
@@ -572,7 +595,7 @@
         function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
         function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
         function iniciais(n) { const p = String(n || '?').trim().split(/\s+/); return ((p[0][0] || '?') + (p.length > 1 ? p[p.length-1][0] : '')).toUpperCase(); }
-        const TONS = [['#FBEAEA','#A30000'],['#FFF3CD','#856404'],['#E8F0FE','#1967D2'],['#E6F4EA','#1E8E3E'],['#F3E8FD','#7B1FA2']];
+        const TONS = [['#F6EEE0','#8C6B45'],['#FFF3CD','#856404'],['#E8F0FE','#1967D2'],['#E6F4EA','#1E8E3E'],['#F3E8FD','#7B1FA2']];
         function avatar(n, cls = '') { let h = 0; for (const c of String(n)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const [bg, fg] = TONS[h % TONS.length]; return `<div class="avatar ${cls}" style="background:${bg};color:${fg}">${esc(iniciais(n))}</div>`; }
         function printHtml(html) {
             if (window.Android && Android.print) { Android.print(html); return; }
@@ -580,16 +603,16 @@
         }
         const PRINT_CSS = `<style>
             body{font-family:'Inter',Arial,sans-serif;color:#202124;margin:22px;font-size:13px}
-            h1{font-family:'Crimson Text',serif;color:#A30000;margin:0 0 2px;font-size:26px}
-            h2{font-family:'Crimson Text',serif;color:#A30000;margin:18px 0 6px;font-size:19px}
+            h1{font-family:'Crimson Text',serif;color:#8C6B45;margin:0 0 2px;font-size:26px}
+            h2{font-family:'Crimson Text',serif;color:#8C6B45;margin:18px 0 6px;font-size:19px}
             .sub{color:#80868B;font-size:12px;margin-bottom:14px}
-            table{width:100%;border-collapse:collapse} th{background:#FBEAEA;color:#A30000;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+            table{width:100%;border-collapse:collapse} th{background:#F6EEE0;color:#8C6B45;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
             th,td{padding:6px 8px;border-bottom:1px solid #E8EAED} td.n,th.n{text-align:right}
             .cal td{border:1px solid #ddd;vertical-align:top;height:84px;width:14.28%;padding:4px;font-size:12px} .cal th{text-align:center;border:1px solid #ddd}
-            .ev{background:#FBEAEA;color:#A30000;border-radius:4px;padding:2px 4px;margin-top:3px;font-size:10.5px}
+            .ev{background:#F6EEE0;color:#8C6B45;border-radius:4px;padding:2px 4px;margin-top:3px;font-size:10.5px}
             .grp{display:inline-block;vertical-align:top;width:30%;margin:0 1.5% 14px;border:1px solid #E8EAED;border-radius:10px;overflow:hidden}
-            .grp h3{margin:0;background:#FBEAEA;color:#A30000;padding:8px 12px;font-size:14px} .grp div{padding:5px 12px;border-top:1px solid #E8EAED}
-            .tot{font-weight:700} .pos{color:#1E8E3E} .neg{color:#D63031}
+            .grp h3{margin:0;background:#F6EEE0;color:#8C6B45;padding:8px 12px;font-size:14px} .grp div{padding:5px 12px;border-top:1px solid #E8EAED}
+            .tot{font-weight:700} .pos{color:#1E8E3E} .neg{color:#9A6A2F}
         </style>`;
         const docHtml = (titulo, sub, corpo) => `<!DOCTYPE html><html><head><meta charset="UTF-8">${PRINT_CSS}</head><body><h1>${esc(titulo)}</h1><div class="sub">${esc(sub)}</div>${corpo}</body></html>`;
         const hoje = () => new Date().toLocaleDateString('pt-BR');
@@ -617,7 +640,36 @@
         }
 
         // ---------- GESTÃO ----------
-        function renderizarMembros(lista = membros) {
+        let filtroMembros = 'todos';
+        const FILTROS_MEMBROS = [
+            ['todos', 'Todos', () => true],
+            ['ativos', 'Ativos', m => m.ativo !== false && !m.afastado],
+            ['afastados', 'Afastados/Inativos', m => m.afastado === true || m.ativo === false],
+            ['resp', 'Responsáveis', m => m.isResponsavel],
+            ['casais', 'Casais', m => m.isCasal],
+            ['voc', 'Vocacionados', m => m.vocacionado === true]
+        ];
+
+        function listaFiltrada() {
+            const t = norm((document.getElementById('search') || {}).value || '');
+            let teste = null;
+            if (filtroMembros.startsWith('role:')) { const r = filtroMembros.slice(5); teste = m => m.role === r; }
+            else teste = (FILTROS_MEMBROS.find(f => f[0] === filtroMembros) || FILTROS_MEMBROS[0])[2];
+            return membros.filter(m => teste(m) && norm(m.nome).includes(t));
+        }
+
+        function setFiltroMembros(f) { filtroMembros = f; renderizarMembros(); }
+
+        function renderFiltrosMembros() {
+            const roles = [...new Set(membros.map(m => m.role).filter(r => r && r !== 'Sem Função'))].sort();
+            const itens = FILTROS_MEMBROS.map(f => [f[0], f[1]]).concat(roles.map(r => ['role:' + r, r]));
+            if (!itens.some(i => i[0] === filtroMembros)) filtroMembros = 'todos';
+            document.getElementById('filtros-membros').innerHTML = itens.map(([k, n]) =>
+                `<button class="chip ${k === filtroMembros ? 'on' : ''}" data-f="${esc(k)}" onclick="setFiltroMembros(this.dataset.f)">${esc(n)}</button>`).join('');
+        }
+
+        function renderizarMembros(lista = listaFiltrada()) {
+            renderFiltrosMembros();
             const container = document.getElementById('lista-membros');
             const ordenada = lista.slice().sort((a,b) => (a.nome || '').localeCompare(b.nome || ''));
             document.getElementById('lista-contagem').innerText = ordenada.length + (ordenada.length === 1 ? ' irmão' : ' irmãos');
@@ -637,8 +689,14 @@
                                 ${m.role && m.role !== 'Sem Função' ? `<span class="tag tag-role">${esc(m.role)}</span>` : ''}
                                 ${m.isCasal ? `<span class="tag tag-casal">Casal${conj ? ' · ' + esc(shortenName(conj.nome).split(' ')[0]) : ''}</span>` : ''}
                                 ${m.afastado ? '<span class="tag tag-away">Afastado</span>' : (m.ativo === false ? '<span class="tag tag-away">Inativo</span>' : '')}
+                                ${m.vocacionado ? '<span class="tag tag-casal">Vocacionado</span>' : ''}
                                 ${idade !== '' ? `<span>${idade} anos</span>` : ''}
                             </div>
+                            ${(m.nasc || m.tel || m.endereco) ? `<div class="m-det">
+                                ${m.nasc ? `<span>🎂 ${dmy(m.nasc)}</span>` : ''}
+                                ${m.tel ? `<span>📞 ${esc(m.tel)}</span>` : ''}
+                                ${m.endereco ? `<span class="addr">📍 ${esc(m.endereco)}</span>` : ''}
+                            </div>` : ''}
                         </div>
                         <span class="chev">›</span></div>`;
                 }).join("");
@@ -649,10 +707,11 @@
 
         function renderDash() {
             const ativos = membros.filter(m => m.ativo !== false && !m.afastado).length;
+            const on = f => filtroMembros === f ? ' sel' : '';
             document.getElementById('dashboard').innerHTML = `
-                <div class="dash-item full"><span>${membros.length}</span><label>Irmãos</label></div>
-                <div class="dash-item"><span>${ativos}</span><label>Ativos</label></div>
-                <div class="dash-item"><span>${membros.filter(m => m.isResponsavel).length}</span><label>Responsáveis</label></div>`;
+                <div class="dash-item full click${on('todos')}" onclick="setFiltroMembros('todos')"><span>${membros.length}</span><label>Irmãos</label></div>
+                <div class="dash-item click${on('ativos')}" onclick="setFiltroMembros('ativos')"><span>${ativos}</span><label>Ativos</label></div>
+                <div class="dash-item click${on('resp')}" onclick="setFiltroMembros('resp')"><span>${membros.filter(m => m.isResponsavel).length}</span><label>Responsáveis</label></div>`;
         }
 
         function renderAniversarios() {
@@ -663,8 +722,7 @@
         }
 
         function filtrarLista() {
-            const t = norm(document.getElementById('search').value);
-            renderizarMembros(membros.filter(m => norm(m.nome).includes(t)));
+            renderizarMembros();
         }
 
         function toggleConjuge() { document.getElementById('editConjugeSelect').style.display = document.getElementById('editIsCasal').checked ? 'block' : 'none'; }
@@ -905,6 +963,16 @@
             renderizarFinanceiro();
         }
 
+        function registrarSaida() {
+            const desc = document.getElementById('saida-desc').value.trim();
+            const v = parseFloat(document.getElementById('saida-valor').value);
+            if (!desc || isNaN(v) || v <= 0) return customAlert("Preencha a descrição e o valor!");
+            financeiro.movimentacoes.unshift({ id: Date.now(), tipo: 'saida', data: document.getElementById('saida-data').value || formatDateToISO(new Date()), valor: v, desc, status: 'pago', valorPago: 0 });
+            save(FIN_KEY, financeiro);
+            ['saida-desc', 'saida-valor'].forEach(i => document.getElementById(i).value = '');
+            renderizarFinanceiro();
+        }
+
         function pagarDivida(id) {
             const m = financeiro.movimentacoes.find(x => x.id == id);
             if (!m) return;
@@ -1045,7 +1113,7 @@
         }
 
         // ---------- Utilidades ----------
-        function shortenName(n) { if (!n) return ""; const p = n.trim().split(/\s+/); return p.length > 1 ? p[0] + ' ' + p[p.length - 1] : p[0]; }
+        function shortenName(n) { return n ? n.trim().replace(/\s+/g, ' ') : ""; }
         function calcularIdade(n, ref = new Date()) { if(!n) return ""; const [y,m,d] = n.split('-').map(Number); const b = new Date(y, m-1, d); let i = ref.getFullYear() - b.getFullYear(); if(ref.getMonth() < b.getMonth() || (ref.getMonth() === b.getMonth() && ref.getDate() < b.getDate())) i--; return i; }
         function popularSelectConjuge(sel = null) { const s = document.getElementById('editConjugeSelect'); s.innerHTML = '<option value="">Selecione</option>' + membros.filter(m => m.id !== editandoId).map(m => `<option value="${m.id}" ${sel == m.id ? 'selected' : ''}>${esc(m.nome)}</option>`).join(""); }
 
@@ -1126,6 +1194,7 @@
         agenda = lerJson(AGE_KEY, { eventos: [] });
         historicoSorteios = lerJson(HIS_KEY, []);
         document.getElementById('fin-data').value = formatDateToISO(new Date());
+        document.getElementById('saida-data').value = formatDateToISO(new Date());
         renderHistoricoSorteios();
 
         switchTab('comunidade');
