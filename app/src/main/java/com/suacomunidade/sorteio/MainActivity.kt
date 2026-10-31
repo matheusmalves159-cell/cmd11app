@@ -168,6 +168,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         @JavascriptInterface
+        fun copyText(text: String) {
+            activity.runOnUiThread {
+                val clipboard = activity.getSystemService(android.content.Context.CLIPBOARD_SERVICE)
+                    as android.content.ClipboardManager
+                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Comunidade 11", text))
+                android.widget.Toast.makeText(activity, "Copiado! Cole no WhatsApp.", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        @JavascriptInterface
         fun saveBackup(json: String, fileName: String) {
             activity.runOnUiThread {
                 try {
