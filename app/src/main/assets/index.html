@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Comunidade 11</title>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="fonts/fonts.css" rel="stylesheet">
     <style>
         :root {
             --primary: #A30000;
@@ -219,6 +219,9 @@
             <input type="text" id="search" placeholder="🔍 Buscar irmão..." oninput="filtrarLista()">
             <div id="lista-membros"></div>
             <button class="btn outline" style="margin-top:20px;" onclick="exportarListaMembrosPDF()">LISTA COMPLETA (PDF)</button>
+            <button class="btn outline" style="margin-top:10px;" onclick="exportarBackup()">💾 SALVAR BACKUP</button>
+            <button class="btn outline" style="margin-top:10px;" onclick="document.getElementById('backup-file').click()">📥 RESTAURAR BACKUP</button>
+            <input type="file" id="backup-file" accept=".json,application/json" style="display:none" onchange="importarBackup(this)">
         </div>
     </main>
 
@@ -637,7 +640,59 @@
         function fecharCalculadora() { document.getElementById('calcModal').style.display = 'none'; }
         function calcInput(v) { document.getElementById('calc-display').value += v; }
         function calcClear() { document.getElementById('calc-display').value = ""; }
-        function calcResult() { try { document.getElementById('calc-display').value = eval(document.getElementById('calc-display').value); } catch(e) { document.getElementById('calc-display').value = "Erro"; } }
+        function calcAvaliar(expr) {
+            // Avaliador seguro (+ - * / e parênteses), sem eval()
+            const t = expr.replace(/\s+/g, '').match(/\d+\.?\d*|\.\d+|[-+*\/()]/g);
+            if (!t || t.join('') !== expr.replace(/\s+/g, '')) throw new Error('expr');
+            let i = 0;
+            const prim = () => {
+                const k = t[i++];
+                if (k === '-') return -prim();
+                if (k === '+') return prim();
+                if (k === '(') { const v = soma(); if (t[i++] !== ')') throw new Error('par'); return v; }
+                const n = parseFloat(k);
+                if (isNaN(n)) throw new Error('num');
+                return n;
+            };
+            const mult = () => { let v = prim(); while (t[i] === '*' || t[i] === '/') { const o = t[i++]; const r = prim(); v = o === '*' ? v * r : v / r; } return v; };
+            const soma = () => { let v = mult(); while (t[i] === '+' || t[i] === '-') { const o = t[i++]; const r = mult(); v = o === '+' ? v + r : v - r; } return v; };
+            const r = soma();
+            if (i !== t.length || !isFinite(r)) throw new Error('fim');
+            return Math.round(r * 1e10) / 1e10;
+        }
+        function calcResult() { const d = document.getElementById('calc-display'); try { d.value = calcAvaliar(d.value); } catch(e) { d.value = "Erro"; } }
+
+        // --- Backup / Restauração ---
+        function exportarBackup() {
+            const dados = { app: "Comunidade 11", versao: 1, exportadoEm: new Date().toISOString(),
+                membros: membros, financeiro: financeiro, agenda: agenda, historico: historicoSorteios };
+            const json = JSON.stringify(dados, null, 2);
+            const nome = "backup_comunidade11_" + new Date().toISOString().slice(0, 10) + ".json";
+            if (window.Android && Android.saveBackup) { Android.saveBackup(json, nome); }
+            else { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json], {type: 'application/json'})); a.download = nome; a.click(); }
+        }
+        function importarBackup(input) {
+            const f = input.files && input.files[0];
+            input.value = "";
+            if (!f) return;
+            const r = new FileReader();
+            r.onload = () => {
+                let d;
+                try { d = JSON.parse(r.result); } catch (e) { return customAlert("Arquivo inválido: não é um backup do app."); }
+                if (!d || d.app !== "Comunidade 11" || !Array.isArray(d.membros) || !d.financeiro || !d.agenda) {
+                    return customAlert("Arquivo inválido: não é um backup do Comunidade 11.");
+                }
+                customConfirm("Restaurar o backup? Os dados atuais deste aparelho serão substituídos.", (c) => {
+                    if (!c) return;
+                    localStorage.setItem(DB_KEY, JSON.stringify(d.membros));
+                    localStorage.setItem(FIN_KEY, JSON.stringify(d.financeiro));
+                    localStorage.setItem(AGE_KEY, JSON.stringify(d.agenda));
+                    localStorage.setItem(HIS_KEY, JSON.stringify(d.historico || []));
+                    location.reload();
+                });
+            };
+            r.readAsText(f);
+        }
 
         // Inicialização
         membros = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
