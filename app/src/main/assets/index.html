@@ -242,9 +242,10 @@
         .group-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
         .group-head { background: var(--primary-soft); color: var(--primary); display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; }
         .group-dates { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 10px 12px 4px; }
-        .gd-tile { display: flex; align-items: center; gap: 10px; background: var(--primary-soft); border: 1px solid #E8DBC2; border-radius: 12px; padding: 8px 10px; cursor: pointer; min-width: 0; }
+        .gd-tile { display: flex; align-items: center; gap: 10px; background: var(--primary-soft); border: 1px solid #E8DBC2; border-radius: 12px; padding: 8px 12px; cursor: pointer; min-width: 0; border-left: 4px solid var(--primary); }
+        .btn.btn-mini { width: auto; min-width: 0; padding: 8px 22px; font-size: 13px; }
         .gd-tile .gd-ico { width: 34px; height: 34px; flex: none; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px; }
-        .gd-tile.euc .gd-ico { background: var(--primary-dark); }
+        .gd-tile.euc { border-left-color: var(--primary-dark); }
         .gd-tile .gd-txt { display: flex; flex-direction: column; min-width: 0; flex: 1; }
         .gd-tile .gd-lbl { font-size: 10.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--primary); line-height: 1.2; }
         .gd-tile .gd-lbl small { white-space: nowrap; text-transform: none; letter-spacing: 0; font-weight: 600; opacity: .75; }
@@ -415,11 +416,11 @@
             <div id="resultado-lista" class="group-grid"></div>
             <div class="card">
                 <div class="btn-row">
-                    <button class="btn green" onclick="confirmarSorteioEAgenda()">✔ Lançar na agenda</button>
                     <button class="btn outline" onclick="exportarGruposParaImpressao()">📄 Grupos (PDF)</button>
                     <button class="btn whats" onclick="copiarGruposWhatsApp()">💬 Copiar p/ WhatsApp</button>
+                    <button class="btn outline" data-email-btn onclick="enviarGruposEmail()">Enviar por e-mail</button>
                 </div>
-                <button class="btn outline" data-email-btn onclick="enviarGruposEmail()">✉️ Enviar por e-mail</button>
+
             </div>
         </div>
     </main>
@@ -975,8 +976,8 @@
                 <div class="group-card">
                     <div class="group-head"><h3>${esc(g.nome)}</h3><span class="count">${g.ids.length}</span></div>
                     <div class="group-dates">
-                        <label class="gd-tile"><span class="gd-ico">🕯️</span><span class="gd-txt"><span class="gd-lbl">Celebração <small>· terça</small></span><input type="date" class="gdata" value="${g.celeb || ''}" onchange="mudarDataGrupo(${gi}, 'celeb', this.value)"></span></label>
-                        <label class="gd-tile euc"><span class="gd-ico">✝️</span><span class="gd-txt"><span class="gd-lbl">Eucaristia <small>· sábado</small></span><input type="date" class="gdata" value="${g.euc || ''}" onchange="mudarDataGrupo(${gi}, 'euc', this.value)"></span></label>
+                        <label class="gd-tile"><span class="gd-txt"><span class="gd-lbl">Celebração <small>· terça</small></span><input type="date" class="gdata" value="${g.celeb || ''}" onchange="mudarDataGrupo(${gi}, 'celeb', this.value)"></span></label>
+                        <label class="gd-tile euc"><span class="gd-txt"><span class="gd-lbl">Eucaristia <small>· sábado</small></span><input type="date" class="gdata" value="${g.euc || ''}" onchange="mudarDataGrupo(${gi}, 'euc', this.value)"></span></label>
                     </div>
                     ${membrosDoGrupo(g).map(m => `
                         <div class="group-row">${avatar(m.nome, 'sm')}<span class="nm">${esc(shortenName(m.nome))}</span>
@@ -1028,19 +1029,17 @@
         }
         function nomesDoGrupo(g) { return membrosDoGrupo(g).map(m => shortenName(m.nome)); }
 
-        function confirmarSorteioEAgenda() {
+        // Guarda o sorteio no histórico (usado para evitar repetir duplas) quando ele é compartilhado
+        function registrarSorteio() {
             if (!sorteioAtual) return;
             const { data, grupos } = sorteioAtual;
-            historicoSorteios.unshift({ id: Date.now(), data, grupos: grupos.map(g => ({ nome: g.nome, ids: g.ids.slice(), celeb: g.celeb || data, euc: g.euc || '', membros: nomesDoGrupo(g) })) });
+            if (!sorteioAtual.salvoId) sorteioAtual.salvoId = Date.now();
+            const reg = { id: sorteioAtual.salvoId, data, grupos: grupos.map(g => ({ nome: g.nome, ids: g.ids.slice(), celeb: g.celeb || data, euc: g.euc || '', membros: nomesDoGrupo(g) })) };
+            const i = historicoSorteios.findIndex(h => h.id === reg.id);
+            if (i >= 0) historicoSorteios[i] = reg; else historicoSorteios.unshift(reg);
             historicoSorteios = historicoSorteios.slice(0, 20);
             save(HIS_KEY, historicoSorteios);
-            grupos.forEach((g, i) => {
-                if (g.celeb) agenda.eventos.push({ id: Date.now() + i * 2 + 1, data: g.celeb, desc: `Celebração - ${g.nome}: ${nomesDoGrupo(g).join(', ')}` });
-                if (g.euc) agenda.eventos.push({ id: Date.now() + i * 2 + 2, data: g.euc, desc: `Eucaristia - ${g.nome}: ${nomesDoGrupo(g).join(', ')}` });
-            });
-            save(AGE_KEY, agenda);
             renderHistoricoSorteios();
-            customAlert(`Sorteio lançado na agenda (${grupos.length} grupos, cada um na sua data).`);
         }
 
         function renderHistoricoSorteios() {
@@ -1049,7 +1048,7 @@
         }
         function abrirHistorico(id) {
             const h = historicoSorteios.find(x => x.id === id); if (!h) return;
-            sorteioAtual = { data: h.data, grupos: gruposDoHistorico(h).map((g, i) => ({ nome: g.nome || 'Grupo ' + (i + 1), ids: g.ids, celeb: g.celeb || h.data, euc: g.euc || '' })) };
+            sorteioAtual = { salvoId: h.id, data: h.data, grupos: gruposDoHistorico(h).map((g, i) => ({ nome: g.nome || 'Grupo ' + (i + 1), ids: g.ids, celeb: g.celeb || h.data, euc: g.euc || '' })) };
             document.getElementById('sort-data').value = h.data;
             renderSorteio();
         }
@@ -1059,6 +1058,7 @@
         }
         function copiarGruposWhatsApp() {
             if (!sorteioAtual) return;
+            registrarSorteio();
             const t = textoGrupos();
             if (window.Android && Android.copyText) { Android.copyText(t); return; }
             const ok = () => customAlert("Grupos copiados! Cole no WhatsApp.");
@@ -1120,6 +1120,7 @@
         }
         function enviarGruposEmail() {
             if (!sorteioAtual) return;
+            registrarSorteio();
             const c = lerCfgEmail();
             if (!c.user || !c.pass || !c.to) { abrirConfigEmail(); return; }
             if (!c.pdf && !c.wpp) return customAlert("Em ⚙️ marque PDF e/ou texto do WhatsApp.");
@@ -1132,6 +1133,7 @@
         }
         function exportarGruposParaImpressao() {
             if (!sorteioAtual) return;
+            registrarSorteio();
             const corpo = sorteioAtual.grupos.map(g => `<div class="grp"><h3>${esc(g.nome)} · ${esc(rotuloDatas(g))}</h3>${nomesDoGrupo(g).map(n => `<div>${esc(n)}</div>`).join('')}</div>`).join('');
             printHtml(docHtml('Comunidade 11', `Sorteio de grupos · ${dmy(sorteioAtual.data)}`, corpo));
         }
