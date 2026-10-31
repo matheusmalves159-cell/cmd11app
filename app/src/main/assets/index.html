@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Comunidade 11</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #A30000;
+            --secondary: #5F6368;
+            --bg: #F8F9FA;
+            --card: #FFFFFF;
+            --text: #202124;
+            --border: #E8EAED;
+            --success: #1E8E3E;
+            --warning: #F9AB00;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 90px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            height: 70px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 5px;
+            border: none;
+            background: none;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--secondary);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab-btn.active { color: var(--primary); }
+        .tab-btn span { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s; }
+        .tab-btn.active span { transform: scale(1.2); }
+
+        .section { display: none; padding: 15px; max-width: 800px; margin: 0 auto; }
+        .section.active { display: block; }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        h2 { font-family: 'Crimson Text', serif; color: var(--primary); margin: 0 0 15px 0; font-size: 20px; }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dash-item {
+            background: #fff;
+            padding: 15px 10px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .dash-item.full { grid-column: span 2; background: var(--primary); color: white; border:none; }
+        .dash-item span { display: block; font-size: 22px; font-weight: bold; color: var(--primary); }
+        .dash-item.full span { color: white; }
+        .dash-item label { font-size: 11px; color: #5f6368; text-transform: uppercase; font-weight: 600; }
+        .dash-item.full label { color: rgba(255,255,255,0.8); }
+
+        .btn-add {
+            position: fixed;
+            right: 20px;
+            bottom: 85px;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(163,0,0,0.3);
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-calc {
+            position: fixed;
+            left: 20px;
+            bottom: 85px;
+            background: #2c3e50;
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background: #F8F9FA;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn.outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .tag { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: bold; margin-right: 5px; text-transform: uppercase; }
+        .tag-casal { background: #FFF3CD; color: #856404; }
+        .tag-role { background: #E8F0FE; color: #1967D2; }
+
+        .progress-container { width: 100%; background: #eee; border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--success); transition: width 0.4s; }
+
+        .calendar-day { padding: 8px 0; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; cursor: pointer; min-height: 50px; display: flex; flex-direction: column; align-items: center; background: white; }
+        .calendar-day.today { background: #E8F0FE; border-color: #1967D2; font-weight: bold; }
+        .calendar-day.selected { background: var(--primary) !important; color: white !important; }
+        .event-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; margin-top: 4px; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; overflow-y: auto; }
+        .modal-content { background: white; margin: 20px auto; padding: 25px; width: 90%; max-width: 500px; border-radius: 20px; }
+
+        .fin-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+        .fin-item.income { color: var(--success); }
+        .fin-item.debt { color: #d63031; }
+
+        @media print {
+            .tab-bar, header, .btn, .btn-add, .btn-calc { display: none !important; }
+            .section { display: block !important; padding: 0 !important; }
+            body { background: white; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 style="margin:0; font-family:'Crimson Text', serif; letter-spacing:1px; font-size: 18px;">Comunidade 11</h1>
+    </header>
+
+    <!-- GESTÃO -->
+    <main id="tab-comunidade" class="section active">
+        <button class="btn-add" onclick="novoIrmao()">+</button>
+        <div id="dashboard" class="dashboard"></div>
+        <div class="card">
+            <input type="text" id="search" placeholder="🔍 Buscar irmão..." oninput="filtrarLista()">
+            <div id="lista-membros"></div>
+            <button class="btn outline" style="margin-top:20px;" onclick="exportarListaMembrosPDF()">LISTA COMPLETA (PDF)</button>
+        </div>
+    </main>
+
+    <!-- SORTEIO -->
+    <main id="tab-sorteio" class="section">
+        <div id="historico-sorteios" style="margin-bottom:15px; display:flex; gap:10px; overflow-x:auto; padding-bottom:5px;"></div>
+        <div class="card">
+            <h2 style="text-align:center;">Sorteio de Grupos</h2>
+            <button class="btn" onclick="gerarSorteio()">SORTEAR AGORA</button>
+        </div>
+        <div id="container-resultados" style="display:none;">
+            <div id="resultado-lista" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:15px; margin-bottom: 20px;"></div>
+            <div class="card" style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn" style="background:#27ae60;" onclick="confirmarSorteioEAgenda()">CONFIRMAR E LANÇAR NA AGENDA</button>
+                <button class="btn outline" onclick="exportarGruposParaImpressao()">EXPORTAR GRUPOS (PDF)</button>
+                <button class="btn" style="background:#25D366;" onclick="copiarGruposWhatsApp()">COPIAR PARA WHATSAPP</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- FINANCEIRO -->
+    <main id="tab-financeiro" class="section">
+        <button id="btn-calc" class="btn-calc" onclick="abrirCalculadora()">🧮</button>
+        <div id="dash-financeiro" class="dashboard">
+            <div class="dash-item full" style="background:#1E8E3E;">
+                <span id="total-caixa" style="color:white;">R$ 0,00</span>
+                <label style="color:rgba(255,255,255,0.8);">Saldo em Caixa</label>
+            </div>
+            <div class="dash-item" style="border-color:#d63031; grid-column: span 2;">
+                <span id="total-dividas" style="color:#d63031;">R$ 0,00</span>
+                <label>Dívidas Pendentes</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Registrar Coleta</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="date" id="fin-data">
+                <input type="number" step="0.01" id="fin-valor" placeholder="R$ 0,00">
+            </div>
+            <button class="btn" onclick="adicionarMovimentacao('entrada')">REGISTRAR ENTRADA</button>
+        </div>
+
+        <div class="card">
+            <h2>Dívidas Pendentes</h2>
+            <div id="lista-dividas"></div>
+            <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+            <div class="form-group">
+                <label>Nova Dívida</label>
+                <input type="text" id="fin-desc" placeholder="Descrição da dívida">
+                <input type="number" step="0.01" id="fin-valor-gasto" placeholder="Valor Total R$">
+                <button class="btn outline" onclick="adicionarMovimentacao('saida')">SALVAR DÍVIDA</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Histórico de Coletas</h2>
+            <div id="lista-coletas"></div>
+            <h2 style="margin-top:20px;">Histórico de Saídas</h2>
+            <div id="lista-saidas"></div>
+            <button class="btn outline" style="margin-top:25px;" onclick="abrirFinanceReportModal()">RELATÓRIO PDF</button>
+        </div>
+    </main>
+
+    <!-- AGENDA -->
+    <main id="tab-agenda" class="section">
+        <div class="card">
+            <div id="calendar-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <button class="btn outline" style="width:auto; padding:5px 15px;" onclick="changeMonth(-1)">◀</button>
+                <div style="text-align:center;">
+                    <h3 id="current-month-year" style="margin:0; font-family:'Crimson Text', serif; color:var(--primary);"></h3>
+                </div>
+                <button class="btn outline" style="width:auto; padding:5px 15px;" onclick="changeMonth(1)">▶</button>
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:5px; text-align:center; margin-bottom:5px; font-weight:bold; font-size:10px; color:#999;">
+                <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div>
+            </div>
+            <div id="calendar-days" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:5px;"></div>
+            <button class="btn outline" style="margin-top:20px;" onclick="abrirExportAgendaModal()">EXPORTAR (PDF / IMAGEM)</button>
+        </div>
+
+        <div id="events-card" class="card" style="display:none;">
+            <h3 id="selected-date-title" style="margin-top:0;">Eventos</h3>
+            <div id="events-list" style="margin-bottom:15px;"></div>
+            <div class="form-group" style="border-top: 1px solid #eee; padding-top:15px;">
+                <input type="text" id="new-event-desc" placeholder="Descrição do evento">
+                <button class="btn" onclick="addCalendarEvent()">SALVAR EVENTO</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- NAVEGAÇÃO -->
+    <nav class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('comunidade')"><span>👥</span>Gestão</button>
+        <button class="tab-btn" onclick="switchTab('sorteio')"><span>🎲</span>Sorteio</button>
+        <button class="tab-btn" onclick="switchTab('financeiro')"><span>💰</span>Finanças</button>
+        <button class="tab-btn" onclick="switchTab('agenda')"><span>📅</span>Agenda</button>
+    </nav>
+
+    <!-- MODAIS -->
+    <div id="editModal" class="modal"><div class="modal-content">
+        <h2 id="editTitle">Membro</h2>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; background:#f8f9fa; padding:10px; border-radius:10px; margin-bottom:15px;">
+            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editAtivo" style="width:auto; margin:0;"> Ativo</label>
+            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editAfastado" style="width:auto; margin:0;"> Afastado</label>
+            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editVocacionado" style="width:auto; margin:0;"> Vocacionado</label>
+            <label style="display:flex; align-items:center; gap:5px; font-size:12px;"><input type="checkbox" id="editIsResponsavel" style="width:auto; margin:0;"> Responsável</label>
+        </div>
+        <input type="text" id="editNome" placeholder="Nome Completo">
+        <input type="date" id="editNasc">
+        <input type="tel" id="editTel" placeholder="Telefone">
+        <textarea id="editEndereco" placeholder="Endereço" rows="2"></textarea>
+        <select id="editRole">
+            <option value="Sem Função">Sem Função</option><option value="Ostiário">Ostiário</option><option value="Salmista">Salmista</option>
+            <option value="Pão">Fazer o Pão</option><option value="Limpeza">Limpeza</option><option value="Passar Roupa">Passar Roupa</option>
+            <option value="Vinho">Vinho</option><option value="Flores">Flores</option>
+        </select>
+        <div style="background:#f0f0f0; padding:10px; border-radius:10px; margin-bottom:15px;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:12px;"><input type="checkbox" id="editIsCasal" style="width:auto; margin:0;"> Casado(a)?</label>
+            <select id="editConjugeSelect" style="margin-top:10px; display:none;"></select>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button class="btn" onclick="confirmarEdicao()">SALVAR</button>
+            <button class="btn outline" onclick="fecharModal()">CANCELAR</button>
+        </div>
+        <button class="btn danger" style="margin-top:10px; background:none; color:red; border:none;" onclick="excluirMembro()">Excluir Irmão</button>
+    </div></div>
+
+    <div id="swapModal" class="modal"><div class="modal-content">
+        <h2 style="text-align:center;">Mover Irmão</h2>
+        <p id="swapMembroName" style="text-align:center; font-weight:bold; color:var(--primary);"></p>
+        <div id="swapGroupsList" style="display:grid; gap:10px; margin-top:20px;"></div>
+        <button class="btn outline" style="margin-top:20px;" onclick="fecharSwapModal()">CANCELAR</button>
+    </div></div>
+
+    <div id="calcModal" class="modal"><div class="modal-content" style="max-width:320px;">
+        <input type="text" id="calc-display" readonly style="font-size:28px; text-align:right; height:60px; margin-bottom:15px;">
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
+            <button class="btn outline" onclick="calcClear()">C</button><button class="btn outline" onclick="calcInput('/')">/</button><button class="btn outline" onclick="calcInput('*')">*</button><button class="btn danger" onclick="fecharCalculadora()">✕</button>
+            <button class="btn outline" onclick="calcInput('7')">7</button><button class="btn outline" onclick="calcInput('8')">8</button><button class="btn outline" onclick="calcInput('9')">9</button><button class="btn outline" onclick="calcInput('-')">-</button>
+            <button class="btn outline" onclick="calcInput('4')">4</button><button class="btn outline" onclick="calcInput('5')">5</button><button class="btn outline" onclick="calcInput('6')">6</button><button class="btn outline" onclick="calcInput('+')">+</button>
+            <button class="btn outline" onclick="calcInput('1')">1</button><button class="btn outline" onclick="calcInput('2')">2</button><button class="btn outline" onclick="calcInput('3')">3</button><button class="btn" style="grid-row: span 2;" onclick="calcResult()">=</button>
+            <button class="btn outline" style="grid-column: span 2;" onclick="calcInput('0')">0</button><button class="btn outline" onclick="calcInput('.')">.</button>
+        </div>
+    </div></div>
+
+    <div id="actionModal" class="modal"><div class="modal-content" style="text-align:center;">
+        <h2 id="actionTitle">Atenção</h2>
+        <p id="actionMessage" style="color:#666; margin-bottom:20px;"></p>
+        <div id="actionInputContainer" style="display:none;"><input type="number" id="actionInput" style="text-align:center; font-size:20px;"></div>
+        <div id="actionButtons" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button id="actionConfirmBtn" class="btn">Confirmar</button>
+            <button class="btn outline" onclick="fecharActionModal()">Cancelar</button>
+        </div>
+        <div id="alertButtonContainer" style="display:none;"><button class="btn" onclick="fecharActionModal()">OK</button></div>
+    </div></div>
+
+    <div id="exportAgendaModal" class="modal"><div class="modal-content">
+        <h2 style="text-align:center;">Exportar Agenda</h2>
+        <div id="lista-meses-export" style="background:#f9f9f9; padding:10px; border-radius:10px; margin-bottom:20px; max-height:200px; overflow-y:auto;"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button class="btn" onclick="prepararExportacao('PDF')">PDF</button>
+            <button class="btn" style="background:#4A4A4A;" onclick="prepararExportacao('IMAGEM')">IMAGEM</button>
+        </div>
+        <button class="btn outline" style="margin-top:10px;" onclick="fecharExportAgendaModal()">VOLTAR</button>
+    </div></div>
+
+    <div id="financeReportModal" class="modal"><div class="modal-content">
+        <h2 style="text-align:center;">Relatório Financeiro</h2>
+        <p style="text-align:center; font-size:12px; color:#666; margin-bottom:20px;">Filtrar por período:</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+            <input type="date" id="rep-inicio"><input type="date" id="rep-fim">
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button class="btn" onclick="gerarRelatorioFinanceiroPDF()">GERAR PDF</button>
+            <button class="btn outline" onclick="fecharFinanceReportModal()">CANCELAR</button>
+        </div>
+    </div></div>
+
+    <script>
+        const DB_KEY = "comunidade_v10_full";
+        const FIN_KEY = "comunidade_v11_final_v4";
+        const AGE_KEY = "comunidade_v11_agenda_v2";
+        const HIS_KEY = "comunidade_v11_his_sorteio";
+
+        let membros = [];
+        let financeiro = { saldoInicial: 1384.94, movimentacoes: [] };
+        let agenda = { eventos: [] };
+        let historicoSorteios = [];
+        let editandoId = null;
+        let selectedDateStr = null;
+        let currentCalendarDate = new Date();
+        let movingEventId = null;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const target = document.getElementById('tab-' + tab);
+            if (target) target.classList.add('active');
+
+            document.getElementById('btn-calc').style.display = (tab === 'financeiro') ? 'flex' : 'none';
+            document.querySelector('.btn-add').style.display = (tab === 'comunidade') ? 'flex' : 'none';
+
+            if (tab === 'financeiro') renderizarFinanceiro();
+            if (tab === 'agenda') renderCalendar();
+            if (tab === 'comunidade') renderizarMembros();
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.getAttribute('onclick')?.includes(`'${tab}'`)) btn.classList.add('active');
+            });
+            window.scrollTo(0,0);
+        }
+
+        // --- GESTÃO ---
+        function renderizarMembros(lista = membros) {
+            const container = document.getElementById('lista-membros');
+            container.innerHTML = lista.sort((a,b) => a.nome.localeCompare(b.nome)).map(m => `
+                <div class="member-item" onclick="abrirModal(${m.id})">
+                    <div style="flex:1;">
+                        <strong>${shortenName(m.nome)}</strong><br>
+                        <div style="margin-top:4px;">
+                            ${m.isResponsavel ? '<span class="tag" style="background:var(--primary);color:white;">Resp</span>' : ''}
+                            <span class="tag tag-role">${m.role}</span>
+                        </div>
+                    </div>
+                    <span style="color:#ccc;">➔</span>
+                </div>`).join("");
+            renderDash();
+        }
+
+        function renderDash() {
+            let ativos = membros.filter(m => m.ativo).length;
+            document.getElementById('dashboard').innerHTML = `
+                <div class="dash-item full"><span>${membros.length}</span><label>Irmãos</label></div>
+                <div class="dash-item"><span>${ativos}</span><label>Ativos</label></div>
+                <div class="dash-item"><span>${membros.filter(m => m.isResponsavel).length}</span><label>Resps</label></div>
+            `;
+        }
+
+        function filtrarLista() {
+            const t = document.getElementById('search').value.toLowerCase();
+            renderizarMembros(membros.filter(m => m.nome.toLowerCase().includes(t)));
+        }
+
+        function abrirModal(id) {
+            const m = membros.find(x => x.id === id);
+            editandoId = id;
+            document.getElementById('editTitle').innerText = "Editar";
+            document.getElementById('editNome').value = m.nome;
+            document.getElementById('editNasc').value = m.nasc || "";
+            document.getElementById('editTel').value = m.tel || "";
+            document.getElementById('editEndereco').value = m.endereco || "";
+            document.getElementById('editRole').value = m.role || "Sem Função";
+            document.getElementById('editAtivo').checked = m.ativo !== false;
+            document.getElementById('editAfastado').checked = m.afastado === true;
+            document.getElementById('editIsResponsavel').checked = m.isResponsavel === true;
+            document.getElementById('editIsCasal').checked = m.isCasal || false;
+            popularSelectConjuge(m.conjugeId);
+            document.getElementById('editConjugeSelect').style.display = m.isCasal ? 'block' : 'none';
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function novoIrmao() {
+            editandoId = null;
+            document.getElementById('editTitle').innerText = "Novo";
+            document.querySelectorAll('#editModal input:not([type=checkbox]), #editModal textarea').forEach(i => i.value = "");
+            document.getElementById('editAtivo').checked = true;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function confirmarEdicao() {
+            if(!editandoId) { membros.push({ id: Date.now(), ativo: true }); editandoId = Date.now(); }
+            const m = membros.find(x => x.id === editandoId) || membros[membros.length-1];
+            m.nome = document.getElementById('editNome').value;
+            m.nasc = document.getElementById('editNasc').value;
+            m.role = document.getElementById('editRole').value;
+            m.ativo = document.getElementById('editAtivo').checked;
+            m.afastado = document.getElementById('editAfastado').checked;
+            m.isResponsavel = document.getElementById('editIsResponsavel').checked;
+            m.isCasal = document.getElementById('editIsCasal').checked;
+            m.conjugeId = m.isCasal ? parseInt(document.getElementById('editConjugeSelect').value) : null;
+            localStorage.setItem(DB_KEY, JSON.stringify(membros));
+            fecharModal(); renderizarMembros();
+        }
+
+        function fecharModal() { document.getElementById('editModal').style.display = 'none'; }
+        function excluirMembro() { customConfirm("Excluir?", (c) => { if(c) { membros = membros.filter(x => x.id !== editandoId); localStorage.setItem(DB_KEY, JSON.stringify(membros)); fecharModal(); renderizarMembros(); } }); }
+
+        // --- FINANCEIRO ---
+        function renderizarFinanceiro() {
+            const lColetas = document.getElementById('lista-coletas');
+            const lSaidas = document.getElementById('lista-saidas');
+            const lDividas = document.getElementById('lista-dividas');
+            let totalD = 0, saldo = financeiro.saldoInicial || 0;
+            let hC = "", hS = "", hD = "";
+
+            financeiro.movimentacoes.forEach(m => {
+                const total = m.valor, pago = m.valorPago || 0, restante = total - pago;
+                const perc = Math.round((pago / total) * 100);
+
+                if (m.tipo === 'entrada') {
+                    saldo += total;
+                    hC += `<div class="fin-item income"><span>${m.desc} (${m.data.split('-').reverse().slice(0,2).join('/')})</span><strong>+ R$ ${total.toLocaleString('pt-BR')}</strong></div>`;
+                } else if (m.tipo === 'saida') {
+                    if (m.status === 'pago') {
+                        saldo -= total;
+                        hS += `<div class="fin-item debt"><span>${m.desc}</span><strong>- R$ ${total.toLocaleString('pt-BR')}</strong></div>`;
+                    } else {
+                        totalD += restante;
+                        hD += `<div class="card" style="padding:15px; margin-bottom:10px; border-left: 5px solid #d63031;">
+                            <strong>${m.desc}</strong><br><small>Total: R$ ${total.toLocaleString('pt-BR')}</small>
+                            <div class="progress-container"><div class="progress-bar" style="width: ${perc}%"></div></div>
+                            <div style="display:flex; justify-content:space-between; font-size:12px;">
+                                <span style="color:green">Pago: R$ ${pago.toLocaleString('pt-BR')}</span>
+                                <span style="color:red">Falta: R$ ${restante.toLocaleString('pt-BR')}</span>
+                            </div>
+                            <button class="btn outline" style="margin-top:10px; padding:5px; font-size:12px;" onclick="pagarDivida('${m.id}')">PAGAR</button>
+                        </div>`;
+                    }
+                }
+            });
+            document.getElementById('total-caixa').innerText = `R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('total-dividas').innerText = `R$ ${totalD.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            lColetas.innerHTML = hC || "Sem coletas."; lSaidas.innerHTML = hS || "Sem saídas."; lDividas.innerHTML = hD || "Sem dívidas.";
+        }
+
+        function adicionarMovimentacao(tipo) {
+            const v = parseFloat(document.getElementById(tipo === 'entrada' ? 'fin-valor' : 'fin-valor-gasto').value);
+            const d = document.getElementById(tipo === 'entrada' ? 'fin-data' : 'fin-desc').value;
+            if(isNaN(v) || !d) return customAlert("Preencha os campos!");
+
+            financeiro.movimentacoes.unshift({ id: Date.now(), tipo, data: document.getElementById('fin-data').value || formatDateToISO(new Date()), valor: v, desc: tipo === 'entrada' ? "Coleta" : d, status: tipo === 'entrada' ? 'pago' : 'pendente', valorPago: 0 });
+            localStorage.setItem(FIN_KEY, JSON.stringify(financeiro));
+            renderizarFinanceiro();
+        }
+
+        function pagarDivida(id) {
+            const m = financeiro.movimentacoes.find(x => x.id == id);
+            const falta = m.valor - (m.valorPago || 0);
+            showActionModal("Pagamento", `Dívida: ${m.desc}. Falta R$ ${falta}`, (val) => {
+                const p = parseFloat(val);
+                if(isNaN(p) || p <= 0) return;
+                m.valorPago = (m.valorPago || 0) + p;
+                if(m.valorPago >= m.valor - 0.01) m.status = 'pago';
+                financeiro.movimentacoes.unshift({ id: Date.now(), tipo: 'saida', data: formatDateToISO(new Date()), valor: p, desc: `PAGTO: ${m.desc}`, status: 'pago' });
+                localStorage.setItem(FIN_KEY, JSON.stringify(financeiro));
+                renderizarFinanceiro();
+            }, { isPrompt: true, defaultValue: falta.toFixed(2) });
+        }
+
+        // --- AGENDA / SORTEIO / UTILIDADES ---
+        function renderCalendar() {
+            const container = document.getElementById('calendar-days');
+            const year = currentCalendarDate.getFullYear(), month = currentCalendarDate.getMonth();
+            document.getElementById('current-month-year').innerText = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentCalendarDate).toUpperCase();
+            const first = new Date(year, month, 1).getDay(), last = new Date(year, month + 1, 0).getDate();
+            let h = "";
+            for(let i=0; i<first; i++) h += `<div></div>`;
+            for(let i=1; i<=last; i++) {
+                const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                const hasE = agenda.eventos.some(e => e.data === ds);
+                const isT = new Date().toDateString() === new Date(year, month, i).toDateString();
+                h += `<div class="calendar-day ${isT?'today':''} ${selectedDateStr===ds?'selected':''}" onclick="selectDate('${ds}')">${i}${hasE?'<div class="event-dot"></div>':''}</div>`;
+            }
+            container.innerHTML = h;
+        }
+
+        function selectDate(ds) {
+            if(movingEventId) {
+                const e = agenda.eventos.find(x => x.id == movingEventId);
+                if(e) { e.data = ds; movingEventId = null; localStorage.setItem(AGE_KEY, JSON.stringify(agenda)); renderCalendar(); renderEventsList(); return; }
+            }
+            selectedDateStr = ds; renderCalendar(); renderEventsList();
+            document.getElementById('events-card').style.display = 'block';
+            document.getElementById('selected-date-title').innerText = ds.split('-').reverse().join('/');
+        }
+
+        function renderEventsList() {
+            const e = agenda.eventos.filter(x => x.data === selectedDateStr);
+            document.getElementById('events-list').innerHTML = e.map(x => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#f8f9fa; border-radius:10px; margin-bottom:5px;">
+                    <span style="font-size:13px;">${x.desc}</span>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="movingEventId='${x.id}';customAlert('Selecione o novo dia');" style="border:none; background:none;">📍</button>
+                        <button onclick="agenda.eventos=agenda.eventos.filter(i=>i.id!=${x.id});localStorage.setItem(AGE_KEY,JSON.stringify(agenda));renderEventsList();renderCalendar();" style="border:none; background:none; color:red;">✕</button>
+                    </div>
+                </div>`).join("") || "Vazio.";
+        }
+
+        function addCalendarEvent() {
+            const d = document.getElementById('new-event-desc').value;
+            if(!d || !selectedDateStr) return;
+            agenda.eventos.push({ id: Date.now(), data: selectedDateStr, desc: d });
+            localStorage.setItem(AGE_KEY, JSON.stringify(agenda));
+            document.getElementById('new-event-desc').value = "";
+            renderEventsList(); renderCalendar();
+        }
+
+        function changeMonth(v) { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + v); renderCalendar(); }
+        function shortenName(n) { return n ? n.split(' ')[0] + ' ' + (n.split(' ').slice(-1)[0] || '') : ""; }
+        function calcularIdade(n, ref = new Date()) { if(!n) return ""; const [y,m,d] = n.split('-').map(Number); const b = new Date(y, m-1, d); let i = ref.getFullYear() - b.getFullYear(); if(ref.getMonth() < b.getMonth() || (ref.getMonth() === b.getMonth() && ref.getDate() < b.getDate())) i--; return i; }
+        function popularSelectConjuge(sel = null) { const s = document.getElementById('editConjugeSelect'); s.innerHTML = '<option value="">Selecione</option>' + membros.filter(m => m.id !== editandoId).map(m => `<option value="${m.id}" ${sel == m.id ? 'selected' : ''}>${m.nome}</option>`).join(""); }
+
+        function showActionModal(t, m, cb, o = {}) {
+            document.getElementById('actionTitle').innerText = t; document.getElementById('actionMessage').innerText = m;
+            const ic = document.getElementById('actionInputContainer'), b = document.getElementById('actionButtons'), a = document.getElementById('alertButtonContainer'), i = document.getElementById('actionInput');
+            if(o.isPrompt) { ic.style.display='block'; i.value=o.defaultValue; } else { ic.style.display='none'; }
+            if(o.isAlert) { b.style.display='none'; a.style.display='block'; } else { b.style.display='grid'; a.style.display='none'; }
+            document.getElementById('actionConfirmBtn').onclick = () => { fecharActionModal(); if(cb) cb(o.isPrompt?i.value:true); };
+            document.getElementById('actionModal').style.display = 'block';
+        }
+        function fecharActionModal() { document.getElementById('actionModal').style.display = 'none'; }
+        function customAlert(m) { showActionModal("Aviso", m, null, { isAlert: true }); }
+        function customConfirm(m, cb) { showActionModal("Confirmar", m, cb); }
+        function abrirCalculadora() { document.getElementById('calc-display').value = ""; document.getElementById('calcModal').style.display = 'block'; }
+        function fecharCalculadora() { document.getElementById('calcModal').style.display = 'none'; }
+        function calcInput(v) { document.getElementById('calc-display').value += v; }
+        function calcClear() { document.getElementById('calc-display').value = ""; }
+        function calcResult() { try { document.getElementById('calc-display').value = eval(document.getElementById('calc-display').value); } catch(e) { document.getElementById('calc-display').value = "Erro"; } }
+
+        // Inicialização
+        membros = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+        if(membros.length === 0) { membros = DADOS_INICIAIS; localStorage.setItem(DB_KEY, JSON.stringify(membros)); }
+        financeiro = JSON.parse(localStorage.getItem(FIN_KEY) || '{"saldoInicial": 1384.94, "movimentacoes": []}');
+        agenda = JSON.parse(localStorage.getItem(AGE_KEY) || '{"eventos":[]}');
+        historicoSorteios = JSON.parse(localStorage.getItem(HIS_KEY) || "[]");
+
+        switchTab('comunidade');
+    </script>
+</body>
+</html>
