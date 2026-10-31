@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var binding: ActivityMainBinding
+    internal lateinit var binding: ActivityMainBinding
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
     private var printWebView: WebView? = null // Mantém referência para evitar Garbage Collection
 
@@ -165,6 +165,22 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 "Erro ao carregar canto: $name"
             }
+        }
+
+        // Envio direto (SMTP do Gmail, sem abrir app de e-mail). pdfJson vazio = sem anexo.
+        @JavascriptInterface
+        fun enviarEmail(usuario: String, senha: String, para: String, assunto: String, texto: String, pdfJson: String, nomePdf: String) {
+            Thread {
+                var msg = "ok"
+                try {
+                    val pdf = if (pdfJson.isBlank()) null else EmailSender.gerarPdf(pdfJson)
+                    EmailSender.enviar(usuario, senha, para, assunto, texto, pdf, nomePdf)
+                } catch (e: Exception) {
+                    msg = e.message ?: e.javaClass.simpleName
+                }
+                val js = "window.emailResultado && emailResultado(${org.json.JSONObject.quote(msg)})"
+                activity.runOnUiThread { activity.binding.webview.evaluateJavascript(js, null) }
+            }.start()
         }
 
         @JavascriptInterface

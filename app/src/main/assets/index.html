@@ -39,6 +39,19 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ---------- Tela de bloqueio ---------- */
+        #lockScreen {
+            position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(160deg, #F5ECDB 0%, #EADDC3 100%); padding: 16px; overflow-y: auto;
+        }
+        #lockScreen.off { display: none; }
+        .lock-box { width: 100%; max-width: 360px; text-align: center; }
+        .lock-box img { width: 110px; height: 110px; border-radius: 50%; background: #fff; object-fit: cover; border: 3px solid rgba(140,107,69,.35); margin-bottom: 14px; }
+        .lock-box h2 { margin: 0 0 6px; }
+        .lock-box p { margin: 0 0 14px; font-size: 13px; color: var(--secondary); }
+        .lock-box input { text-align: center; }
+        #lk-msg { min-height: 18px; font-size: 13px; font-weight: 600; color: var(--danger); margin: 0 0 8px; }
+
         /* ---------- Cabeçalho ---------- */
         header {
             background: linear-gradient(135deg, #F5ECDB 0%, #EADDC3 100%);
@@ -62,6 +75,8 @@
             margin: 0; font-family: 'Crimson Text', serif; font-weight: 700;
             letter-spacing: .5px; font-size: 20px; line-height: 1.1;
         }
+        .cfg-btn { justify-self: start; border: none; background: rgba(140,107,69,.14); width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+        .cfg-btn:active { background: rgba(140,107,69,.28); }
         .header-sub {
             justify-self: end; font-size: 11px; font-weight: 600; letter-spacing: .8px;
             text-transform: uppercase; background: rgba(140,107,69,.14); color: #5A4426;
@@ -140,14 +155,13 @@
         .dash-item.divida span { color: var(--danger); }
 
         /* ---------- Botões ---------- */
-        .btn-add, .btn-calc {
+        .btn-add {
             position: fixed; right: 16px; bottom: 82px; color: white; border: none; cursor: pointer;
             z-index: 999; display: flex; align-items: center; justify-content: center;
             border-radius: 50%; transition: transform .15s;
         }
         .btn-add { background: var(--primary); width: 58px; height: 58px; font-size: 30px; box-shadow: 0 6px 18px rgba(163,0,0,.38); }
-        .btn-calc { background: #2c3e50; width: 54px; height: 54px; font-size: 24px; box-shadow: 0 6px 16px rgba(0,0,0,.25); display: none; }
-        .btn-add:active, .btn-calc:active { transform: scale(.92); }
+        .btn-add:active { transform: scale(.92); }
 
         .btn {
             background: var(--primary); color: white; border: 2px solid var(--primary);
@@ -227,6 +241,9 @@
         .group-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 12px; }
         .group-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
         .group-head { background: var(--primary-soft); color: var(--primary); display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; }
+        .group-head { flex-wrap: wrap; gap: 6px 10px; }
+        .gdata-l { flex: 1 1 45%; font-size: 12px; color: var(--secondary); font-weight: 600; }
+        .group-head .gdata { margin: 2px 0 0; padding: 6px 10px; font-size: 13px; background: #fff; }
         .group-head h3 { margin: 0; font-family: 'Crimson Text', serif; font-size: 18px; }
         .group-head .count { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 10px; }
         .group-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 1px solid var(--border); font-size: 13.5px; }
@@ -285,8 +302,6 @@
         .check-row small { margin-left: auto; color: var(--muted); text-transform: none; }
         .swap-btn { justify-content: space-between; }
 
-        .calc-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .calc-keys .btn { min-height: 48px; font-size: 18px; padding: 6px; }
 
         @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
@@ -305,7 +320,7 @@
             .tab-btn.active { background: var(--primary-soft); }
             .tab-btn.active::after { top: 18%; bottom: 18%; left: -6px; right: auto; width: 4px; height: auto; border-radius: 0 4px 4px 0; }
             .section { padding: 10px 14px 90px; }
-            .btn-add, .btn-calc { bottom: 16px; right: 18px; }
+            .btn-add { bottom: 16px; right: 18px; }
             .cols-2 { grid-template-columns: 1fr 1fr; }
             #lista-membros { grid-template-columns: 1fr 1fr; }
             .agenda-layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
@@ -323,7 +338,7 @@
         }
 
         @media print {
-            .tab-bar, header, .btn, .btn-add, .btn-calc { display: none !important; }
+            .tab-bar, header, .btn, .btn-add { display: none !important; }
             .section { display: block !important; padding: 0 !important; }
             body { background: white; padding: 0; }
         }
@@ -331,8 +346,22 @@
 </head>
 <body>
 
+    <div id="lockScreen">
+        <div class="lock-box">
+            <img src="logo.png" alt="">
+            <h2 id="lk-titulo">Digite a senha</h2>
+            <input type="password" id="lk-atual" placeholder="Senha atual" autocomplete="off" style="display:none">
+            <input type="password" id="lk-senha" placeholder="Senha" autocomplete="off">
+            <input type="password" id="lk-conf" placeholder="Repita a nova senha" autocomplete="off" style="display:none">
+            <div id="lk-msg" role="alert"></div>
+            <button class="btn" id="lk-ok" onclick="lockConfirmar()">ENTRAR</button>
+            <button class="btn outline" id="lk-cancel" style="margin-top:8px; display:none" onclick="lockCancelar()">CANCELAR</button>
+            <button class="btn danger" id="lk-esqueci" style="margin-top:8px; display:none" onclick="lockEsqueci()">Esqueci a senha</button>
+        </div>
+    </div>
+
     <header>
-        <span aria-hidden="true"></span>
+        <button class="cfg-btn" onclick="abrirConfigEmail()" aria-label="Configurações de e-mail">⚙️</button>
         <img class="brand-logo" src="logo.png" alt="">
         <span class="header-sub" id="header-sub">Gestão</span>
     </header>
@@ -369,7 +398,7 @@
             <div class="sort-opts">
                 <div><label class="field" for="sort-n">Nº de grupos</label>
                     <select id="sort-n"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-                <div><label class="field" for="sort-data">Data</label>
+                <div><label class="field" for="sort-data">Semana de início</label>
                     <input type="date" id="sort-data"></div>
             </div>
             <div class="check-box"><label><input type="checkbox" id="sort-casais" checked> Manter casais no mesmo grupo</label></div>
@@ -377,6 +406,7 @@
             <button class="btn" onclick="gerarSorteio()">🎲 SORTEAR AGORA</button>
         </div>
         <div id="container-resultados" style="display:none;">
+            <p id="sort-aviso" style="margin:0 0 10px; font-size:12.5px; font-weight:600; color:var(--primary);"></p>
             <div id="resultado-lista" class="group-grid"></div>
             <div class="card">
                 <div class="btn-row">
@@ -384,13 +414,13 @@
                     <button class="btn outline" onclick="exportarGruposParaImpressao()">📄 Grupos (PDF)</button>
                     <button class="btn whats" onclick="copiarGruposWhatsApp()">💬 Copiar p/ WhatsApp</button>
                 </div>
+                <button class="btn outline" data-email-btn onclick="enviarGruposEmail()">✉️ Enviar por e-mail</button>
             </div>
         </div>
     </main>
 
     <!-- FINANCEIRO -->
     <main id="tab-financeiro" class="section">
-        <button id="btn-calc" class="btn-calc" onclick="abrirCalculadora()" aria-label="Calculadora">🧮</button>
         <div id="dash-financeiro" class="dashboard fin">
             <div class="dash-item caixa">
                 <span id="total-caixa">R$ 0,00</span>
@@ -515,6 +545,27 @@
         <button id="btnExcluir" class="btn danger" style="margin-top:6px;" onclick="excluirMembro()">Excluir irmão</button>
     </div></div>
 
+    <div id="cfgEmailModal" class="modal"><div class="modal-content" style="max-width:460px;">
+        <h2>Envio por e-mail</h2>
+        <p style="margin:0 0 12px; font-size:12.5px; color:var(--secondary);">O app envia direto pelo seu Gmail, sem abrir outra tela. Use uma <strong>senha de app</strong> (não a senha normal): Conta Google → Segurança → Verificação em duas etapas → Senhas de app.</p>
+        <label class="field" for="cfg-user">Seu Gmail (quem envia)</label>
+        <input type="email" id="cfg-user" inputmode="email" autocomplete="off" placeholder="voce@gmail.com">
+        <label class="field" for="cfg-pass">Senha de app do Gmail</label>
+        <input type="password" id="cfg-pass" autocomplete="off" placeholder="xxxx xxxx xxxx xxxx">
+        <label class="field" for="cfg-to">Enviar para</label>
+        <input type="email" id="cfg-to" inputmode="email" autocomplete="off" placeholder="destino@email.com">
+        <div class="check-box">
+            <label><input type="checkbox" id="cfg-pdf"> Anexar PDF dos grupos</label><br>
+            <label style="display:inline-block;margin-top:8px"><input type="checkbox" id="cfg-wpp"> Texto no formato do WhatsApp</label>
+        </div>
+        <button class="btn" onclick="salvarEFecharConfigEmail()">SALVAR</button>
+        <h2 style="margin-top:22px">Segurança</h2>
+        <button class="btn outline" onclick="fecharConfigEmail(); lockAbrir('alterar')">🔑 Alterar senha do app</button>
+        <button class="btn outline" style="margin-top:8px;" onclick="fecharConfigEmail(); lockAbrir('entrar')">🔒 Bloquear agora</button>
+        <button class="btn outline" style="margin-top:8px;" data-email-btn onclick="testarEmail()">ENVIAR E-MAIL DE TESTE</button>
+        <button class="btn outline" style="margin-top:8px;" onclick="fecharConfigEmail()">FECHAR</button>
+    </div></div>
+
     <div id="swapModal" class="modal"><div class="modal-content" style="max-width:420px;">
         <h2>Mover irmão</h2>
         <p id="swapMembroName" style="text-align:center; font-weight:700; color:var(--primary); margin:0;"></p>
@@ -522,16 +573,6 @@
         <button class="btn outline" style="margin-top:16px;" onclick="fecharSwapModal()">CANCELAR</button>
     </div></div>
 
-    <div id="calcModal" class="modal"><div class="modal-content" style="max-width:320px;">
-        <input type="text" id="calc-display" readonly style="font-size:28px; text-align:right; height:60px; margin-bottom:12px;">
-        <div class="calc-keys">
-            <button class="btn outline" onclick="calcClear()">C</button><button class="btn outline" onclick="calcInput('/')">÷</button><button class="btn outline" onclick="calcInput('*')">×</button><button class="btn danger" onclick="fecharCalculadora()">✕</button>
-            <button class="btn outline" onclick="calcInput('7')">7</button><button class="btn outline" onclick="calcInput('8')">8</button><button class="btn outline" onclick="calcInput('9')">9</button><button class="btn outline" onclick="calcInput('-')">−</button>
-            <button class="btn outline" onclick="calcInput('4')">4</button><button class="btn outline" onclick="calcInput('5')">5</button><button class="btn outline" onclick="calcInput('6')">6</button><button class="btn outline" onclick="calcInput('+')">+</button>
-            <button class="btn outline" onclick="calcInput('1')">1</button><button class="btn outline" onclick="calcInput('2')">2</button><button class="btn outline" onclick="calcInput('3')">3</button><button class="btn" style="grid-row: span 2; min-height:auto;" onclick="calcResult()">=</button>
-            <button class="btn outline" style="grid-column: span 2;" onclick="calcInput('0')">0</button><button class="btn outline" onclick="calcInput('.')">.</button>
-        </div>
-    </div></div>
 
     <div id="actionModal" class="modal"><div class="modal-content" style="text-align:center; max-width:420px;">
         <h2 id="actionTitle">Atenção</h2>
@@ -624,7 +665,6 @@
             const target = document.getElementById('tab-' + tab);
             if (target) target.classList.add('active');
 
-            document.getElementById('btn-calc').style.display = (tab === 'financeiro') ? 'flex' : 'none';
             document.querySelector('.btn-add').style.display = (tab === 'comunidade') ? 'flex' : 'none';
             document.getElementById('header-sub').innerText = NOMES_TAB[tab] || '';
 
@@ -809,6 +849,93 @@
             if (!document.getElementById('sort-data').value) document.getElementById('sort-data').value = formatDateToISO(new Date());
         }
 
+        // Peso de cada par de irmãos que já caiu junto em sorteios anteriores (os mais recentes pesam mais)
+        // Lê os grupos de um sorteio salvo, aceitando também formatos antigos (lista, objeto, nomes em vez de ids)
+        function gruposDoHistorico(h) {
+            const gs = h && h.grupos;
+            const lista = Array.isArray(gs) ? gs : (gs && typeof gs === 'object' ? Object.values(gs) : []);
+            return lista.map(g => {
+                const itens = Array.isArray(g) ? g : (g && (Array.isArray(g.ids) ? g.ids : g.membros)) || [];
+                const ids = [];
+                itens.forEach(x => {
+                    const m = membros.find(y => y.id === x || y.nome === x || shortenName(y.nome) === x);
+                    if (m) ids.push(m.id);
+                });
+                return { nome: (g && g.nome) || '', ids, celeb: (g && (g.celeb || g.data)) || (h && h.data) || '', euc: (g && g.euc) || '' };
+            });
+        }
+
+        function pesosHistorico() {
+            const w = {};
+            historicoSorteios.forEach((h, i) => {
+                const f = 1 / (1 + i * 0.2);
+                gruposDoHistorico(h).forEach(g => {
+                    const ids = g.ids;
+                    for (let x = 0; x < ids.length; x++) for (let y = x + 1; y < ids.length; y++) {
+                        const k = chavePar(ids[x], ids[y]);
+                        w[k] = (w[k] || 0) + f;
+                    }
+                });
+            });
+            return w;
+        }
+        const chavePar = (a, b) => a < b ? a + '|' + b : b + '|' + a;
+
+        // Distribui as unidades (irmão sozinho ou casal) em n grupos evitando repetir quem já esteve junto.
+        function montarGrupos(unidades, n) {
+            const w = pesosHistorico();
+            const total = unidades.reduce((t, u) => t + u.length, 0);
+            const cap = Math.ceil(total / n);
+            const resp = u => u.filter(m => m.isResponsavel).length;
+            const entre = (u, v) => { let c = 0; u.forEach(a => v.forEach(b => { c += w[chavePar(a.id, b.id)] || 0; })); return c; };
+            const tam = g => g.reduce((t, u) => t + u.length, 0);
+            const custoGrupo = g => {
+                let c = 0, r = 0;
+                for (let i = 0; i < g.length; i++) { r += resp(g[i]); for (let j = i + 1; j < g.length; j++) c += entre(g[i], g[j]); }
+                return c + 3 * r * r;
+            };
+            const custoTotal = gs => gs.reduce((t, g) => t + custoGrupo(g), 0);
+
+            let melhor = null, melhorCusto = Infinity, melhorDif = Infinity;
+            for (let t = 0; t < 40; t++) {
+                const gs = Array.from({ length: n }, () => []);
+                // Responsáveis primeiro (para espalhar); dentro de cada bloco a ordem é aleatória
+                const ord = shuffle(unidades.slice()).sort((a, b) => (b.length - a.length) || (resp(b) - resp(a)));
+                ord.forEach(u => {
+                    // Equilíbrio: só entra em grupo que não passe do limite nem fique acima do menor grupo (além do tamanho da unidade)
+                    const menor = Math.min(...gs.map(tam));
+                    let cands = gs.filter(g => tam(g) + u.length <= cap && tam(g) <= menor + u.length - 1);
+                    if (!cands.length) cands = gs.filter(g => tam(g) === menor);
+                    let best = [], bc = Infinity;
+                    cands.forEach(g => {
+                        const c = g.reduce((s, v) => s + entre(u, v), 0) + 3 * (2 * g.reduce((s, v) => s + resp(v), 0) * resp(u) + resp(u) * resp(u));
+                        if (c < bc - 1e-9) { bc = c; best = [g]; } else if (Math.abs(c - bc) < 1e-9) best.push(g);
+                    });
+                    best[Math.floor(Math.random() * best.length)].push(u);
+                });
+                // Melhoria local: troca unidades de mesmo tamanho entre grupos enquanto o custo cair
+                let melhorou = true, voltas = 0;
+                while (melhorou && voltas++ < 30) {
+                    melhorou = false;
+                    for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++)
+                        for (let i = 0; i < gs[a].length; i++) for (let j = 0; j < gs[b].length; j++) {
+                            if (gs[a][i].length !== gs[b][j].length) continue;
+                            const antes = custoGrupo(gs[a]) + custoGrupo(gs[b]);
+                            [gs[a][i], gs[b][j]] = [gs[b][j], gs[a][i]];
+                            if (custoGrupo(gs[a]) + custoGrupo(gs[b]) < antes - 1e-9) melhorou = true;
+                            else [gs[a][i], gs[b][j]] = [gs[b][j], gs[a][i]];
+                        }
+                }
+                const tams = gs.map(tam), dif = Math.max(...tams) - Math.min(...tams);
+                const c = custoTotal(gs);
+                if (dif < melhorDif || (dif === melhorDif && c < melhorCusto - 1e-9)) { melhorDif = dif; melhorCusto = c; melhor = gs; }
+            }
+            let repetidos = 0;
+            melhor.forEach(g => { for (let i = 0; i < g.length; i++) for (let j = i + 1; j < g.length; j++) if (entre(g[i], g[j]) > 0) repetidos++; });
+            const grupos = melhor.map((g, i) => ({ nome: 'Grupo ' + (i + 1), ids: shuffle(g.flat().map(m => m.id)) }));
+            return { grupos, repetidos };
+        }
+
         function gerarSorteio() {
             const n = parseInt(document.getElementById('sort-n').value);
             const data = document.getElementById('sort-data').value || formatDateToISO(new Date());
@@ -827,14 +954,9 @@
                 }
                 unidades.push(un);
             });
-            // Responsáveis primeiro, para ficarem espalhados entre os grupos
-            unidades.sort((a, b) => (b.some(x => x.isResponsavel) ? 1 : 0) - (a.some(x => x.isResponsavel) ? 1 : 0));
-            const grupos = Array.from({ length: n }, (_, i) => ({ nome: 'Grupo ' + (i + 1), ids: [] }));
-            unidades.forEach(un => {
-                const menor = grupos.reduce((p, g) => g.ids.length < p.ids.length ? g : p, grupos[0]);
-                un.forEach(m => menor.ids.push(m.id));
-            });
-            sorteioAtual = { data, grupos };
+            const { grupos, repetidos } = montarGrupos(unidades, n);
+            distribuirDatas(grupos, data);
+            sorteioAtual = { data, grupos, repetidos };
             renderSorteio();
         }
 
@@ -842,16 +964,38 @@
             const box = document.getElementById('container-resultados');
             if (!sorteioAtual) { box.style.display = 'none'; return; }
             box.style.display = 'block';
+            const aviso = (!historicoSorteios.length || sorteioAtual.repetidos === undefined) ? '' : (sorteioAtual.repetidos ? `${sorteioAtual.repetidos} dupla(s) já estiveram juntas antes (não deu para evitar todas).` : '✔ Ninguém ficou com quem já esteve junto nos sorteios anteriores.');
+            document.getElementById('sort-aviso').innerText = aviso;
             document.getElementById('resultado-lista').innerHTML = sorteioAtual.grupos.map((g, gi) => `
                 <div class="group-card">
-                    <div class="group-head"><h3>${esc(g.nome)}</h3><span class="count">${g.ids.length}</span></div>
-                    ${g.ids.map(id => membros.find(x => x.id === id)).filter(Boolean).map(m => `
+                    <div class="group-head"><h3>${esc(g.nome)}</h3><span class="count">${g.ids.length}</span><label class="gdata-l">Celebração (terça)<input type="date" class="gdata" value="${g.celeb || ''}" onchange="mudarDataGrupo(${gi}, 'celeb', this.value)"></label><label class="gdata-l">Eucaristia (sábado)<input type="date" class="gdata" value="${g.euc || ''}" onchange="mudarDataGrupo(${gi}, 'euc', this.value)"></label></div>
+                    ${membrosDoGrupo(g).map(m => `
                         <div class="group-row">${avatar(m.nome, 'sm')}<span class="nm">${esc(shortenName(m.nome))}</span>
                             ${m.isResponsavel ? '<span class="tag tag-resp">Resp</span>' : ''}
                             <button class="mv" onclick="abrirSwap(${m.id})" aria-label="Mover">⇄</button></div>`).join('') || '<div class="group-row" style="color:var(--muted)">Vazio</div>'}
                 </div>`).join('');
         }
 
+        function mudarDataGrupo(gi, campo, v) { if (sorteioAtual && sorteioAtual.grupos[gi] && v) sorteioAtual.grupos[gi][campo] = v; }
+        // Celebração = toda terça; Eucaristia = todo sábado. Cada grupo tem as duas em semanas diferentes.
+        function isoParaData(iso) { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); }
+        function somaDias(dt, n) { const r = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + n); return r; }
+        function distribuirDatas(grupos, base) {
+            const b = isoParaData(base);
+            const t0 = somaDias(b, (2 - b.getDay() + 7) % 7); // próxima terça (ou a própria data)
+            const n = grupos.length;
+            grupos.forEach((g, i) => {
+                const semEuc = n > 1 ? (i + 1) % n : 1; // sábado de outra semana, sempre
+                g.celeb = formatDateToISO(somaDias(t0, 7 * i));
+                g.euc = formatDateToISO(somaDias(t0, 4 + 7 * semEuc));
+            });
+        }
+        function rotuloDatas(g, sep) {
+            const p = [];
+            if (g.celeb) p.push('Celebração ' + dmy(g.celeb));
+            if (g.euc) p.push('Eucaristia ' + dmy(g.euc));
+            return p.join(sep || ' · ');
+        }
         function abrirSwap(id) {
             const m = membros.find(x => x.id === id); if (!m || !sorteioAtual) return;
             const atual = sorteioAtual.grupos.findIndex(g => g.ids.includes(id));
@@ -863,37 +1007,46 @@
         function moverMembro(id, gi) {
             sorteioAtual.grupos.forEach(g => g.ids = g.ids.filter(x => x !== id));
             sorteioAtual.grupos[gi].ids.push(id);
+            sorteioAtual.repetidos = undefined;
             fecharSwapModal(); renderSorteio();
         }
         function fecharSwapModal() { document.getElementById('swapModal').style.display = 'none'; }
 
-        function nomesDoGrupo(g) { return g.ids.map(id => membros.find(x => x.id === id)).filter(Boolean).map(m => shortenName(m.nome)); }
+        // Responsáveis sempre no topo do grupo; os demais em ordem alfabética
+        function membrosDoGrupo(g) {
+            return g.ids.map(id => membros.find(x => x.id === id)).filter(Boolean)
+                .sort((a, b) => (b.isResponsavel ? 1 : 0) - (a.isResponsavel ? 1 : 0) || (a.nome || '').localeCompare(b.nome || ''));
+        }
+        function nomesDoGrupo(g) { return membrosDoGrupo(g).map(m => shortenName(m.nome)); }
 
         function confirmarSorteioEAgenda() {
             if (!sorteioAtual) return;
             const { data, grupos } = sorteioAtual;
-            historicoSorteios.unshift({ id: Date.now(), data, grupos: grupos.map(g => ({ nome: g.nome, ids: g.ids.slice(), membros: nomesDoGrupo(g) })) });
+            historicoSorteios.unshift({ id: Date.now(), data, grupos: grupos.map(g => ({ nome: g.nome, ids: g.ids.slice(), celeb: g.celeb || data, euc: g.euc || '', membros: nomesDoGrupo(g) })) });
             historicoSorteios = historicoSorteios.slice(0, 20);
             save(HIS_KEY, historicoSorteios);
-            grupos.forEach((g, i) => agenda.eventos.push({ id: Date.now() + i + 1, data, desc: `${g.nome}: ${nomesDoGrupo(g).join(', ')}` }));
+            grupos.forEach((g, i) => {
+                if (g.celeb) agenda.eventos.push({ id: Date.now() + i * 2 + 1, data: g.celeb, desc: `Celebração - ${g.nome}: ${nomesDoGrupo(g).join(', ')}` });
+                if (g.euc) agenda.eventos.push({ id: Date.now() + i * 2 + 2, data: g.euc, desc: `Eucaristia - ${g.nome}: ${nomesDoGrupo(g).join(', ')}` });
+            });
             save(AGE_KEY, agenda);
             renderHistoricoSorteios();
-            customAlert(`Sorteio lançado na agenda em ${dmy(data)}.`);
+            customAlert(`Sorteio lançado na agenda (${grupos.length} grupos, cada um na sua data).`);
         }
 
         function renderHistoricoSorteios() {
             document.getElementById('historico-sorteios').innerHTML = historicoSorteios.map(h =>
-                `<button class="chip" onclick="abrirHistorico(${h.id})">📋 ${dmy(h.data)} · ${h.grupos.length} grupos</button>`).join('');
+                `<button class="chip" onclick="abrirHistorico(${h.id})">📋 ${dmy(h.data)} · ${gruposDoHistorico(h).length} grupos</button>`).join('');
         }
         function abrirHistorico(id) {
             const h = historicoSorteios.find(x => x.id === id); if (!h) return;
-            sorteioAtual = { data: h.data, grupos: h.grupos.map(g => ({ nome: g.nome, ids: (g.ids || []).filter(i => membros.some(m => m.id === i)) })) };
+            sorteioAtual = { data: h.data, grupos: gruposDoHistorico(h).map((g, i) => ({ nome: g.nome || 'Grupo ' + (i + 1), ids: g.ids, celeb: g.celeb || h.data, euc: g.euc || '' })) };
             document.getElementById('sort-data').value = h.data;
             renderSorteio();
         }
 
         function textoGrupos() {
-            return `*Sorteio de grupos - ${dmy(sorteioAtual.data)}*\n\n` + sorteioAtual.grupos.map(g => `*${g.nome}*\n` + nomesDoGrupo(g).map(n => '• ' + n).join('\n')).join('\n\n');
+            return `*Sorteio de grupos - ${dmy(sorteioAtual.data)}*\n\n` + sorteioAtual.grupos.map(g => `*${g.nome}*\n${rotuloDatas(g, '\n')}\n` + nomesDoGrupo(g).map(n => '• ' + n).join('\n')).join('\n\n');
         }
         function copiarGruposWhatsApp() {
             if (!sorteioAtual) return;
@@ -903,9 +1056,74 @@
             if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, () => customAlert("Não foi possível copiar."));
             else customAlert("Não foi possível copiar.");
         }
+        // ---------- E-MAIL (envio direto, configurado dentro do app) ----------
+        const EMAIL_CFG_KEY = "comunidade_email_cfg";
+        const CFG_PADRAO = { user: 'matheus.malves159@gmail.com', pass: '', to: 'matheus.malves159@gmail.com', pdf: true, wpp: true };
+        function lerCfgEmail() {
+            try { return Object.assign({}, CFG_PADRAO, JSON.parse(localStorage.getItem(EMAIL_CFG_KEY) || '{}')); }
+            catch (e) { return Object.assign({}, CFG_PADRAO); }
+        }
+        function abrirConfigEmail() {
+            const c = lerCfgEmail();
+            document.getElementById('cfg-user').value = c.user;
+            document.getElementById('cfg-pass').value = c.pass;
+            document.getElementById('cfg-to').value = c.to;
+            document.getElementById('cfg-pdf').checked = c.pdf;
+            document.getElementById('cfg-wpp').checked = c.wpp;
+            document.getElementById('cfgEmailModal').style.display = 'block';
+        }
+        function fecharConfigEmail() { document.getElementById('cfgEmailModal').style.display = 'none'; }
+        function salvarConfigEmail() {
+            const c = {
+                user: document.getElementById('cfg-user').value.trim(),
+                pass: document.getElementById('cfg-pass').value.trim(),
+                to: document.getElementById('cfg-to').value.trim(),
+                pdf: document.getElementById('cfg-pdf').checked,
+                wpp: document.getElementById('cfg-wpp').checked
+            };
+            const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!ok.test(c.user) || !ok.test(c.to)) { customAlert("Preencha e-mails válidos (de onde envia e para onde vai)."); return null; }
+            if (!c.pass) { customAlert("Cole a senha de app do Gmail."); return null; }
+            try { localStorage.setItem(EMAIL_CFG_KEY, JSON.stringify(c)); } catch (e) {}
+            return c;
+        }
+        function salvarEFecharConfigEmail() { if (salvarConfigEmail()) { fecharConfigEmail(); customAlert("Configuração salva!"); } }
+        function testarEmail() {
+            const c = salvarConfigEmail(); if (!c) return;
+            if (!(window.Android && Android.enviarEmail)) return customAlert("O envio direto funciona só dentro do app instalado.");
+            emailEnviando(true);
+            Android.enviarEmail(c.user, c.pass, c.to, 'Teste - Comunidade 11', 'Teste de envio do app. Se você recebeu este e-mail, está tudo certo!', '', '');
+        }
+        function emailEnviando(on) {
+            document.querySelectorAll('[data-email-btn]').forEach(b => { b.disabled = on; b.dataset.txt = b.dataset.txt || b.innerText; b.innerText = on ? 'Enviando…' : b.dataset.txt; });
+        }
+        function emailResultado(msg) {
+            if (lockEnviandoCodigo) {
+                lockEnviandoCodigo = false;
+                document.getElementById('lk-esqueci').disabled = false;
+                if (msg === 'ok') lockAbrir('recuperar');
+                else { try { localStorage.removeItem(LOCK_REC_KEY); } catch (e) {} lockMsg('Não foi possível enviar o código: ' + msg); }
+                return;
+            }
+            emailEnviando(false);
+            if (msg === 'ok') customAlert("E-mail enviado com sucesso! ✔");
+            else customAlert("Não foi possível enviar: " + msg);
+        }
+        function enviarGruposEmail() {
+            if (!sorteioAtual) return;
+            const c = lerCfgEmail();
+            if (!c.user || !c.pass || !c.to) { abrirConfigEmail(); return; }
+            if (!c.pdf && !c.wpp) return customAlert("Em ⚙️ marque PDF e/ou texto do WhatsApp.");
+            if (!(window.Android && Android.enviarEmail)) return customAlert("O envio direto funciona só dentro do app instalado.");
+            const assunto = `Sorteio de grupos - ${dmy(sorteioAtual.data)}`;
+            const texto = c.wpp ? textoGrupos() : `Sorteio de grupos de ${dmy(sorteioAtual.data)} em anexo.`;
+            const pdf = c.pdf ? JSON.stringify({ titulo: 'Comunidade 11', sub: `Sorteio de grupos · ${dmy(sorteioAtual.data)}`, grupos: sorteioAtual.grupos.map(g => ({ nome: g.nome + ' · ' + rotuloDatas(g), nomes: nomesDoGrupo(g) })) }) : '';
+            emailEnviando(true);
+            Android.enviarEmail(c.user, c.pass, c.to, assunto, texto, pdf, `sorteio-${sorteioAtual.data}.pdf`);
+        }
         function exportarGruposParaImpressao() {
             if (!sorteioAtual) return;
-            const corpo = sorteioAtual.grupos.map(g => `<div class="grp"><h3>${esc(g.nome)} (${g.ids.length})</h3>${nomesDoGrupo(g).map(n => `<div>${esc(n)}</div>`).join('')}</div>`).join('');
+            const corpo = sorteioAtual.grupos.map(g => `<div class="grp"><h3>${esc(g.nome)} · ${esc(rotuloDatas(g))}</h3>${nomesDoGrupo(g).map(n => `<div>${esc(n)}</div>`).join('')}</div>`).join('');
             printHtml(docHtml('Comunidade 11', `Sorteio de grupos · ${dmy(sorteioAtual.data)}`, corpo));
         }
 
@@ -1128,31 +1346,6 @@
         function fecharActionModal() { document.getElementById('actionModal').style.display = 'none'; }
         function customAlert(m) { showActionModal("Aviso", m, null, { isAlert: true }); }
         function customConfirm(m, cb) { showActionModal("Confirmar", m, cb); }
-        function abrirCalculadora() { document.getElementById('calc-display').value = ""; document.getElementById('calcModal').style.display = 'block'; }
-        function fecharCalculadora() { document.getElementById('calcModal').style.display = 'none'; }
-        function calcInput(v) { document.getElementById('calc-display').value += v; }
-        function calcClear() { document.getElementById('calc-display').value = ""; }
-        function calcAvaliar(expr) {
-            // Avaliador seguro (+ - * / e parênteses), sem eval()
-            const t = expr.replace(/\s+/g, '').match(/\d+\.?\d*|\.\d+|[-+*\/()]/g);
-            if (!t || t.join('') !== expr.replace(/\s+/g, '')) throw new Error('expr');
-            let i = 0;
-            const prim = () => {
-                const k = t[i++];
-                if (k === '-') return -prim();
-                if (k === '+') return prim();
-                if (k === '(') { const v = soma(); if (t[i++] !== ')') throw new Error('par'); return v; }
-                const n = parseFloat(k);
-                if (isNaN(n)) throw new Error('num');
-                return n;
-            };
-            const mult = () => { let v = prim(); while (t[i] === '*' || t[i] === '/') { const o = t[i++]; const r = prim(); v = o === '*' ? v * r : v / r; } return v; };
-            const soma = () => { let v = mult(); while (t[i] === '+' || t[i] === '-') { const o = t[i++]; const r = mult(); v = o === '+' ? v + r : v - r; } return v; };
-            const r = soma();
-            if (i !== t.length || !isFinite(r)) throw new Error('fim');
-            return Math.round(r * 1e10) / 1e10;
-        }
-        function calcResult() { const d = document.getElementById('calc-display'); try { d.value = calcAvaliar(d.value); } catch(e) { d.value = "Erro"; } }
 
         // --- Backup / Restauração ---
         function exportarBackup() {
@@ -1198,6 +1391,145 @@
         renderHistoricoSorteios();
 
         switchTab('comunidade');
+    
+        // ---------- SENHA DE ACESSO AO APP ----------
+        const LOCK_KEY = "comunidade_lock_v1";
+        const LOCK_BLOQ_KEY = "comunidade_lock_bloq_ate";
+        const LOCK_VOLTA_MS = 60 * 1000; // volta a pedir a senha depois de 1 min fora do app
+        let lockModo = 'entrar', lockTentativas = 0, lockSaiuEm = 0;
+
+        function sha256(msg) {
+            const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+            const b = new TextEncoder().encode(msg), l = b.length;
+            const n = (((l + 8) >> 6) + 1) << 4, w = new Uint32Array(n);
+            for (let i = 0; i < l; i++) w[i >> 2] |= b[i] << (24 - (i & 3) * 8);
+            w[l >> 2] |= 0x80 << (24 - (l & 3) * 8);
+            w[n - 1] = l * 8;
+            const H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19], W = new Uint32Array(64);
+            const R = (x, k) => (x >>> k) | (x << (32 - k));
+            for (let o = 0; o < n; o += 16) {
+                for (let t = 0; t < 16; t++) W[t] = w[o + t];
+                for (let t = 16; t < 64; t++) {
+                    const s0 = R(W[t-15], 7) ^ R(W[t-15], 18) ^ (W[t-15] >>> 3), s1 = R(W[t-2], 17) ^ R(W[t-2], 19) ^ (W[t-2] >>> 10);
+                    W[t] = (W[t-16] + s0 + W[t-7] + s1) | 0;
+                }
+                let [a, b2, c, d, e, f, g, h] = H;
+                for (let t = 0; t < 64; t++) {
+                    const T1 = (h + (R(e, 6) ^ R(e, 11) ^ R(e, 25)) + ((e & f) ^ (~e & g)) + K[t] + W[t]) | 0;
+                    const T2 = ((R(a, 2) ^ R(a, 13) ^ R(a, 22)) + ((a & b2) ^ (a & c) ^ (b2 & c))) | 0;
+                    h = g; g = f; f = e; e = (d + T1) | 0; d = c; c = b2; b2 = a; a = (T1 + T2) | 0;
+                }
+                H[0] = (H[0] + a) | 0; H[1] = (H[1] + b2) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+                H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+            }
+            return H.map(x => (x >>> 0).toString(16).padStart(8, '0')).join('');
+        }
+        function hashSenha(senha, sal) { let h = sal + senha; for (let i = 0; i < 20000; i++) h = sha256(h + sal + senha); return h; }
+        function lerLock() { try { return JSON.parse(localStorage.getItem(LOCK_KEY) || 'null'); } catch (e) { return null; } }
+        function novoSal() { return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(x => x.toString(16).padStart(2, '0')).join(''); }
+
+        function lockMsg(t) { document.getElementById('lk-msg').innerText = t || ''; }
+        function lockAbrir(modo) {
+            lockModo = lockLerModo(modo);
+            const el = id => document.getElementById(id);
+            ['lk-atual', 'lk-senha', 'lk-conf'].forEach(i => { el(i).value = ''; el(i).style.display = 'none'; });
+            lockMsg('');
+            el('lk-esqueci').style.display = 'none';
+            if (lockModo === 'criar') {
+                el('lk-titulo').innerText = 'Crie uma senha';
+                el('lk-senha').placeholder = 'Nova senha'; el('lk-senha').style.display = ''; el('lk-conf').style.display = '';
+                el('lk-ok').innerText = 'CRIAR SENHA'; el('lk-cancel').style.display = 'none';
+            } else if (lockModo === 'recuperar') {
+                el('lk-titulo').innerText = 'Recuperar senha';
+                el('lk-atual').placeholder = 'Código recebido por e-mail'; el('lk-atual').style.display = '';
+                el('lk-senha').placeholder = 'Nova senha'; el('lk-senha').style.display = ''; el('lk-conf').style.display = '';
+                el('lk-ok').innerText = 'REDEFINIR SENHA'; el('lk-cancel').style.display = '';
+                lockMsg('Enviamos um código para ' + lerCfgEmail().to);
+            } else if (lockModo === 'alterar') {
+                el('lk-titulo').innerText = 'Alterar senha';
+                el('lk-atual').placeholder = 'Senha atual'; el('lk-atual').style.display = ''; el('lk-senha').placeholder = 'Nova senha'; el('lk-senha').style.display = ''; el('lk-conf').style.display = '';
+                el('lk-ok').innerText = 'SALVAR'; el('lk-cancel').style.display = '';
+            } else {
+                el('lk-titulo').innerText = 'Digite a senha';
+                el('lk-senha').placeholder = 'Senha'; el('lk-senha').style.display = '';
+                el('lk-ok').innerText = 'ENTRAR'; el('lk-cancel').style.display = 'none';
+                el('lk-esqueci').style.display = '';
+            }
+            document.getElementById('lockScreen').classList.remove('off');
+            setTimeout(() => { const f = (lockModo === 'alterar' || lockModo === 'recuperar') ? el('lk-atual') : el('lk-senha'); f.focus(); }, 50);
+        }
+        function lockLerModo(m) { return (m === 'entrar' && !lerLock()) ? 'criar' : m; }
+        function lockFechar() { document.getElementById('lockScreen').classList.add('off'); ['lk-atual', 'lk-senha', 'lk-conf'].forEach(i => document.getElementById(i).value = ''); }
+        function lockCancelar() { if (lockModo === 'recuperar') lockAbrir('entrar'); else lockFechar(); }
+
+        function lockEspera() {
+            let ate = 0; try { ate = parseInt(localStorage.getItem(LOCK_BLOQ_KEY) || '0'); } catch (e) {}
+            return Math.max(0, Math.ceil((ate - Date.now()) / 1000));
+        }
+        function lockErro() {
+            lockTentativas++;
+            if (lockTentativas >= 5) {
+                lockTentativas = 0;
+                try { localStorage.setItem(LOCK_BLOQ_KEY, String(Date.now() + 30000)); } catch (e) {}
+                lockMsg('Muitas tentativas. Aguarde 30 segundos.');
+            } else lockMsg('Senha incorreta.');
+        }
+        // Recuperação: envia um código de 6 dígitos para o e-mail configurado em ⚙️ (vale 10 min)
+        const LOCK_REC_KEY = "comunidade_lock_rec";
+        let lockEnviandoCodigo = false;
+        function lockEsqueci() {
+            const c = lerCfgEmail();
+            if (!c.pass) return lockMsg('Para recuperar por e-mail, é preciso ter configurado a senha de app do Gmail em ⚙️ antes.');
+            if (!(window.Android && Android.enviarEmail)) return lockMsg('A recuperação por e-mail funciona só dentro do app instalado.');
+            const cod = String(100000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 900000));
+            const sal = novoSal();
+            try { localStorage.setItem(LOCK_REC_KEY, JSON.stringify({ sal, h: sha256(sal + cod), ate: Date.now() + 10 * 60 * 1000, tent: 0 })); } catch (e) { return lockMsg('Não foi possível gerar o código.'); }
+            lockEnviandoCodigo = true;
+            document.getElementById('lk-esqueci').disabled = true;
+            lockMsg('Enviando código para ' + c.to + '…');
+            Android.enviarEmail(c.user, c.pass, c.to, 'Código para redefinir a senha - Comunidade 11', 'Seu código de recuperação: ' + cod + '\n\nEle vale por 10 minutos. Se não foi você que pediu, ignore este e-mail.', '', '');
+        }
+        function lockCodigoOk(cod) {
+            let r = null; try { r = JSON.parse(localStorage.getItem(LOCK_REC_KEY) || 'null'); } catch (e) {}
+            if (!r || Date.now() > r.ate) { lockMsg('Código vencido. Volte e peça um novo.'); return false; }
+            if (sha256(r.sal + cod.trim()) !== r.h) {
+                r.tent = (r.tent || 0) + 1;
+                if (r.tent >= 5) { try { localStorage.removeItem(LOCK_REC_KEY); } catch (e) {} lockMsg('Muitas tentativas. Peça um novo código.'); }
+                else { try { localStorage.setItem(LOCK_REC_KEY, JSON.stringify(r)); } catch (e) {} lockMsg('Código incorreto.'); }
+                return false;
+            }
+            return true;
+        }
+        function lockVerificar(senha) { const c = lerLock(); return !!c && hashSenha(senha, c.sal) === c.hash; }
+
+        function lockConfirmar() {
+            const v = id => document.getElementById(id).value;
+            const espera = lockEspera();
+            if (lockModo !== 'criar' && espera > 0) return lockMsg('Aguarde ' + espera + 's para tentar de novo.');
+            if (lockModo === 'entrar') {
+                if (lockVerificar(v('lk-senha'))) { lockTentativas = 0; lockFechar(); } else lockErro();
+                return;
+            }
+            if (lockModo === 'alterar' && !lockVerificar(v('lk-atual'))) return lockErro();
+            if (lockModo === 'recuperar' && !lockCodigoOk(v('lk-atual'))) return;
+            const nova = v('lk-senha');
+            if (nova.length < 4) return lockMsg('A senha precisa ter pelo menos 4 caracteres.');
+            if (nova !== v('lk-conf')) return lockMsg('As senhas não são iguais.');
+            const sal = novoSal();
+            try { localStorage.setItem(LOCK_KEY, JSON.stringify({ sal, hash: hashSenha(nova, sal) })); }
+            catch (e) { return lockMsg('Não foi possível salvar a senha.'); }
+            lockTentativas = 0; lockFechar();
+            if (lockModo === 'alterar') customAlert("Senha alterada!");
+            if (lockModo === 'recuperar') { try { localStorage.removeItem(LOCK_REC_KEY); } catch (e) {} }
+        }
+        ['lk-atual', 'lk-senha', 'lk-conf'].forEach(i => document.getElementById(i).addEventListener('keydown', e => { if (e.key === 'Enter') lockConfirmar(); }));
+
+        // Volta a bloquear quando o app fica fora da tela por mais de 1 minuto
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) lockSaiuEm = Date.now();
+            else if (lockSaiuEm && Date.now() - lockSaiuEm > LOCK_VOLTA_MS && document.getElementById('lockScreen').classList.contains('off')) lockAbrir('entrar');
+        });
+        lockAbrir('entrar');
     </script>
 </body>
 </html>
